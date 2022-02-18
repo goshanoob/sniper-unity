@@ -15,7 +15,7 @@ public class GameSettings : MonoBehaviour
     public static int  currentLevel = 1;
 
     /// <summary>
-    /// Теккущий уровень игры.
+    /// Текущий уровень игры.
     /// </summary>
     public int CurrentLevel
     {

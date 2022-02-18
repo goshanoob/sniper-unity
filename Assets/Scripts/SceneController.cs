@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -14,7 +15,11 @@ public class SceneController : MonoBehaviour
     /// Камера.
     /// </summary>
     [SerializeField] private Camera mainCamera = null;
-
+    /// <summary>
+    /// Размер снаряда.
+    /// </summary>
+    [SerializeField] float shellSize = 0.2f;
+    
     /// <summary>
     /// Количестов кубов в мишени.
     /// </summary>
@@ -23,6 +28,8 @@ public class SceneController : MonoBehaviour
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 0;
+
+    private GameObject shell = null;
     
     private void Start()
     {
@@ -33,7 +40,7 @@ public class SceneController : MonoBehaviour
     private void Update()
     {
         bool space = Input.GetKey(KeyCode.Space);
-        bool click = Input.GetMouseButton(0);
+        bool click = Input.GetMouseButtonDown(0);
         if (space)
         {
             mainCamera.transform.position = new Vector3(0, 2, GameSettings.targetDistances[currentLevel - 1] - 10);
@@ -43,7 +50,7 @@ public class SceneController : MonoBehaviour
             mainCamera.transform.position = new Vector3(0, 2, 0);
         }
 
-        if (click)
+        if (click && shell == null)
         {
             Shoot();
         }
@@ -77,9 +84,21 @@ public class SceneController : MonoBehaviour
     /// <summary>
     /// Выстрелить по мишени.
     /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
     private void Shoot()
     {
-        throw new NotImplementedException();
+        Vector3 cameraDirection = mainCamera.transform.forward;
+        
+        shell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        shell.transform.localScale = new Vector3(shellSize, shellSize, shellSize);
+        shell.transform.position = mainCamera.transform.position + cameraDirection * 5f;
+        Rigidbody rigidBody = shell.AddComponent<Rigidbody>();
+        rigidBody.AddForce(cameraDirection * 10f);
+        StartCoroutine(DestroyShell());
+    }
+
+
+    private IEnumerator DestroyShell(){
+        yield return new WaitForSeconds(10);
+        Destroy(shell);
     }
 }
