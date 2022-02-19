@@ -16,10 +16,13 @@ public class SceneController : MonoBehaviour
     /// </summary>
     [SerializeField] private Camera mainCamera = null;
     /// <summary>
-    /// Размер снаряда.
+    /// Элемень снаряда.
     /// </summary>
-    [SerializeField] float shellSize = 0.2f;
-    
+    [SerializeField] private GameObject shellPrefab = null;
+    /// <summary>
+    /// Сила выстрела снарядом.
+    /// </summary>
+    [SerializeField] private float shotForce = 10f;
     /// <summary>
     /// Количестов кубов в мишени.
     /// </summary>
@@ -28,12 +31,25 @@ public class SceneController : MonoBehaviour
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 0;
+    /// <summary>
+    /// Количество снарядов в игре.
+    /// </summary>
+    private const int shellsCount = 5;
 
-    private GameObject shell = null;
+    private int shellsCountInMode = 1;
+
+    
+    
+    /// <summary>
+    /// Сняряды на сцене.
+    /// </summary>
+    private GameObject[] shellsInScene = null;
     
     private void Start()
     {
+        
         currentLevel = GameSettings.currentLevel;
+        shellsInScene = new GameObject[shellsCount];
         CrateTarget();
     }
     
@@ -50,7 +66,7 @@ public class SceneController : MonoBehaviour
             mainCamera.transform.position = new Vector3(0, 2, 0);
         }
 
-        if (click && shell == null)
+        if (click && shellsInScene[0] == null)
         {
             Shoot();
         }
@@ -63,6 +79,7 @@ public class SceneController : MonoBehaviour
     {
         GameObject target = new GameObject("Target");
         target.transform.position = new Vector3(0, 0, GameSettings.targetDistances[0]);
+        Color[] colors = new Color[4] {Color.white, Color.blue, Color.red, Color.yellow};
         
         int columnCount = 7;
         float offsetX = 0;
@@ -77,7 +94,11 @@ public class SceneController : MonoBehaviour
                 offsetX = 0;
                 offsetY++;
             }
-            
+
+            int rowNumber = i % 7;
+            int colNumber = i / 7;
+            Material cubeMaterial = cube.GetComponent<Renderer>().materials[0];
+            cubeMaterial.color = colors[colNumber % colors.Length];
         }
     }
     
@@ -86,19 +107,36 @@ public class SceneController : MonoBehaviour
     /// </summary>
     private void Shoot()
     {
-        Vector3 cameraDirection = mainCamera.transform.forward;
-        
-        shell = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        shell.transform.localScale = new Vector3(shellSize, shellSize, shellSize);
-        shell.transform.position = mainCamera.transform.position + cameraDirection * 5f;
-        Rigidbody rigidBody = shell.AddComponent<Rigidbody>();
-        rigidBody.AddForce(cameraDirection * 10f);
-        StartCoroutine(DestroyShell());
+        CrateShells();
+        StartCoroutine(RemoveShells());
     }
 
+    /// <summary>
+    /// Добавить сняряды на сцену.
+    /// </summary>
+    private void CrateShells()
+    {
+        Vector3 cameraDirection = mainCamera.transform.forward;
+        for (int i = 0; i < shellsCountInMode; i++)
+        {
+            shellsInScene[i] = Instantiate<GameObject>(shellPrefab);
+            shellsInScene[i].transform.position = mainCamera.transform.position;
+            shellsInScene[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
+        }
+    }
 
-    private IEnumerator DestroyShell(){
-        yield return new WaitForSeconds(10);
-        Destroy(shell);
+    /// <summary>
+    /// Уничтожить снаряды после выстрела.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RemoveShells()
+    {
+        yield return new WaitForSeconds(10); 
+        
+        foreach (GameObject shell in shellsInScene)
+        {
+            Destroy(shell);
+        }
+        Array.Clear(shellsInScene, 0, shellsInScene.Length);
     }
 }
