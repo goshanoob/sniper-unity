@@ -17,6 +17,8 @@ public class CameraRotator : MonoBehaviour
         currentXRotation += xRotation;
         currentYRotation += yRotation;
         currentXRotation = Mathf.Clamp(currentXRotation,maxVerticalAngle, minVerticalAngle);
-        transform.localEulerAngles = new Vector3(currentXRotation, currentYRotation, 0);;
+        transform.localEulerAngles = new Vector3(currentXRotation, currentYRotation, 0);
+        
+        
     }
 }
