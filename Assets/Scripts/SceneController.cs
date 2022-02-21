@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -9,9 +8,6 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     /// <summary>
-    /// Куб мишени.
-    /// </summary>
-    [SerializeField] private GameObject targetsCube = null;/// <summary>
     /// Масса куба мишени.
     /// </summary>
     [SerializeField] private float cubeTargetMass = 0.2f;
@@ -44,6 +40,11 @@ public class SceneController : MonoBehaviour
 
     private bool canChase = false;
 
+    /// <summary>
+    /// Количество набранных очков.
+    /// </summary>
+    private int score = 0;
+    
     private float timer = 0;
     private bool isForward = true;
     private float x1 = -2f * Mathf.Sqrt(2);
@@ -53,10 +54,15 @@ public class SceneController : MonoBehaviour
     /// Сняряды на сцене.
     /// </summary>
     private GameObject[] shellsInScene = null;
+    /// <summary>
+    /// Настройки игры.
+    /// </summary>
+    private GameSettings settings = null;
     
     private void Start()
     {
-        currentLevel = GameSettings.currentLevel;
+        settings = GameSettings.Instance;
+        currentLevel = settings.CurrentLevel;
         shellsInScene = new GameObject[shellsCount];
         CrateTarget();
     }
@@ -67,7 +73,7 @@ public class SceneController : MonoBehaviour
         bool click = Input.GetMouseButtonDown(0);
         if (space)
         {
-            mainCamera.transform.position = new Vector3(0, 2, GameSettings.targetDistances[currentLevel - 1] - 10);
+            mainCamera.transform.position = new Vector3(0, 2, settings.TargetDistance - 10);
         }
         else
         {
@@ -113,15 +119,15 @@ public class SceneController : MonoBehaviour
             
         }
     }
-    
+
     /// <summary>
     /// Сформировать мишень.
     /// </summary>
     private void CrateTarget()
     {
         GameObject target = new GameObject("Target");
-        target.transform.position = new Vector3(0, 0, GameSettings.targetDistances[0]);
-        Color[] colors = new Color[4] {Color.white, Color.blue, Color.red, Color.yellow};
+        target.transform.position = new Vector3(0, 0, settings.TargetDistance);
+        Color[] colors = new Color[] {Color.white, Color.blue, Color.red, Color.yellow};
         
         int columnCount = 7;
         int rowCount = 7;
@@ -138,7 +144,7 @@ public class SceneController : MonoBehaviour
                 cubeTarget.transform.localScale = Vector3.one;
                 Rigidbody cubeTargetBody = cubeTarget.AddComponent<Rigidbody>();
                 cubeTargetBody.mass = cubeTargetMass;
-                cubeTarget.transform.position = new Vector3(offsetX, offsetY, GameSettings.targetDistances[0]);
+                cubeTarget.transform.localPosition = new Vector3(offsetX, offsetY, 0);
                 cubeTarget.transform.parent = target.transform;
                     
                 Material cubeMaterial = cubeTarget.GetComponent<Renderer>().materials[0];
@@ -165,7 +171,7 @@ public class SceneController : MonoBehaviour
             offsetX = -columnCount / 2.0f;
         }
     }
-    
+
     /// <summary>
     /// Выстрелить по мишени.
     /// </summary>
