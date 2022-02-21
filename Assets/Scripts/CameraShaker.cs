@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class CameraShaker : MonoBehaviour
 {
     [SerializeField] private float a = 2f;
@@ -66,5 +69,10 @@ public class CameraShaker : MonoBehaviour
             x1 += dx;
             
         }
+    }
+
+    private void MakeShake()
+    {
+        
     }
 }
