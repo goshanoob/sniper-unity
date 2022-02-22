@@ -8,6 +8,14 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     /// <summary>
+    /// Настройки игры.
+    /// </summary>
+    [SerializeField] private GameSettings settings = null;
+    /// <summary>
+    /// Настройки оружия.
+    /// </summary>
+    [SerializeField] private WeaponController weapon = null;
+    /// <summary>
     /// Масса куба мишени.
     /// </summary>
     [SerializeField] private float cubeTargetMass = 0.2f;
@@ -15,55 +23,32 @@ public class SceneController : MonoBehaviour
     /// Камера.
     /// </summary>
     [SerializeField] private Camera mainCamera = null;
+    
     /// <summary>
-    /// Элемень снаряда.
-    /// </summary>
-    [SerializeField] private GameObject shellPrefab = null;
-    /// <summary>
-    /// Сила выстрела снарядом.
-    /// </summary>
-    [SerializeField] private float shotForce = 10f;
-    /// <summary>
-    /// Количестов кубов в мишени.
+    /// Количество кубов в мишени.
     /// </summary>
     private const int cubeCount = 49;
     /// <summary>
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 0;
-    /// <summary>
-    /// Количество снарядов в игре.
-    /// </summary>
-    private const int shellsCount = 5;
+    
 
     private int shellsCountInMode = 1;
 
     private bool canChase = false;
 
-    /// <summary>
-    /// Количество набранных очков.
-    /// </summary>
-    private int score = 0;
-    
     private float timer = 0;
     private bool isForward = true;
     private float x1 = -2f * Mathf.Sqrt(2);
     private float dx = 0.2f;
     private float a = 2f;
-    /// <summary>
-    /// Сняряды на сцене.
-    /// </summary>
-    private GameObject[] shellsInScene = null;
-    /// <summary>
-    /// Настройки игры.
-    /// </summary>
-    private GameSettings settings = null;
+    
+    
     
     private void Start()
     {
-        settings = GameSettings.Instance;
         currentLevel = settings.CurrentLevel;
-        shellsInScene = new GameObject[shellsCount];
         CrateTarget();
     }
     
@@ -80,9 +65,10 @@ public class SceneController : MonoBehaviour
             mainCamera.transform.position = new Vector3(0, 2, 0);
         }
 
-        if (click && shellsInScene[0] == null)
+        // Если нажата кнопка мыши и на сцене отсутсвуют снаряды, выстрелить.
+        if (click && weapon.Shells[0] == null)
         {
-            Shoot();
+            weapon.CrateShells();
             canChase = true;
         }
         
@@ -90,8 +76,8 @@ public class SceneController : MonoBehaviour
         if (canChase)
         {
             Vector3 cameraOffset = new Vector3(-5f, 5f, -10f);
-            mainCamera.transform.position = shellsInScene[0].transform.position + cameraOffset;
-            mainCamera.transform.transform.LookAt(shellsInScene[0].transform);
+            mainCamera.transform.position = weapon.Shells[0].transform.position + cameraOffset;
+            mainCamera.transform.transform.LookAt(weapon.Shells[0].transform);
             if (Mathf.Abs((transform.position - mainCamera.transform.position).magnitude) >= 50f)
             {
                 canChase = false;
@@ -170,43 +156,5 @@ public class SceneController : MonoBehaviour
             offsetY += cubeSize;
             offsetX = -columnCount / 2.0f;
         }
-    }
-
-    /// <summary>
-    /// Выстрелить по мишени.
-    /// </summary>
-    private void Shoot()
-    {
-        CrateShells();
-        StartCoroutine(RemoveShells());
-    }
-
-    /// <summary>
-    /// Добавить сняряды на сцену.
-    /// </summary>
-    private void CrateShells()
-    {
-        Vector3 cameraDirection = mainCamera.transform.forward;
-        for (int i = 0; i < shellsCountInMode; i++)
-        {
-            shellsInScene[i] = Instantiate<GameObject>(shellPrefab);
-            shellsInScene[i].transform.position = mainCamera.transform.position;
-            shellsInScene[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
-        }
-    }
-
-    /// <summary>
-    /// Уничтожить снаряды после выстрела.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator RemoveShells()
-    {
-        yield return new WaitForSeconds(10); 
-        
-        foreach (GameObject shell in shellsInScene)
-        {
-            Destroy(shell);
-        }
-        Array.Clear(shellsInScene, 0, shellsInScene.Length);
     }
 }

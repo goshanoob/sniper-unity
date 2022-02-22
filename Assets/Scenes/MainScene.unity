@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -307,7 +307,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 232a559b3a6a3294cbca14fdffb653ad, type: 3}
   m_Name: 
@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 1949855891}
   - component: {fileID: 1949855890}
   - component: {fileID: 1949855892}
+  - component: {fileID: 1949855893}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -390,10 +391,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d39f70d55be20748b0526d3d49266ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 1949855892}
+  weapon: {fileID: 1949855893}
   cubeTargetMass: 0.2
   mainCamera: {fileID: 963194227}
-  shellPrefab: {fileID: 2509241775753120801, guid: 0c47dae9e2be91448bef3a4c7af7f4ce, type: 3}
-  shotForce: 10
 --- !u!4 &1949855891
 Transform:
   m_ObjectHideFlags: 0
@@ -420,6 +421,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c13ed106a37c450b8fe24b6ec27777d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1949855893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949855889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5393833f3dee881428286b3fbf7dad05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 1949855892}
+  shellPrefab: {fileID: 2509241775753120801, guid: 0c47dae9e2be91448bef3a4c7af7f4ce, type: 3}
+  mainCamera: {fileID: 963194227}
+  shotForce: 10
 --- !u!1 &2025631698
 GameObject:
   m_ObjectHideFlags: 0

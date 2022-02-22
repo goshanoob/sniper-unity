@@ -17,6 +17,10 @@ public class GameSettings : MonoBehaviour
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 1;
+    /// <summary>
+    /// Количество очков, набранное на текущем уровне.
+    /// </summary>
+    private int currentPoints = 0;
 
     /// <summary>
     /// Настройки игры.
@@ -44,10 +48,21 @@ public class GameSettings : MonoBehaviour
     {
         get => currentLevel;
         set => currentLevel = value;
-    } 
+    }
+
+    /// <summary>
+    /// Количество очков, набранное на текущем уровне.
+    /// </summary>
+    public int Points
+    {
+        get => currentPoints;
+        set => currentPoints = value;
+    }
 
     private void Start()
     {
+        // Если ссылка на данный экземпляр не установлена, присвоить ее.
+        // Если экзепляр уже существует, уничтожить текущий игровой объект.
         if (instance == null)
         {
             instance = this;
