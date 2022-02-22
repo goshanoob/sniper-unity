@@ -7,34 +7,35 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     /// <summary>
-    /// Событие удержания кнопки пробел.
+    /// Событие взаимодействия с кнопкой пробел.
     /// </summary>
-    public event Action OnSpaceHold;
-    /// <summary>
-    /// Событие удержания кнопки пробел.
-    /// </summary>
-    public event Action OnSpaceRelease;
+    public event Action<bool> OnSpaceAction;
+
     /// <summary>
     /// Событие нажатия левой кнопки мыши.
     /// </summary>
     public event Action OnLeftClick;
+
     /// <summary>
     /// Событие нажатия кнопки 1 на клавиатуре.
     /// </summary>
-    public event Action OnOneButtonPress;
+    public event Action<int> OnOneButtonPress;
+
     /// <summary>
     /// Событие нажатия кнопки 2 на клавиатуре.
     /// </summary>
-    public event Action OnTwoButtonPress;
+    public event Action<int> OnTwoButtonPress;
+
     /// <summary>
     /// Событие нажатия кнопки 3 на клавиатуре.
     /// </summary>
-    public event Action OnThreeButtonPress;
+    public event Action<int> OnThreeButtonPress;
+
     /// <summary>
     /// Событие нажатия кнопки 4 на клавиатуре.
     /// </summary>
-    public event Action OnFourButtonPress;
-    
+    public event Action<int> OnFourButtonPress;
+
     private void Update()
     {
         bool spaceDown = Input.GetKey(KeyCode.Space);
@@ -47,38 +48,43 @@ public class PlayerControl : MonoBehaviour
         // Если зажата клавиша пробел, вызвать событие.
         if (spaceDown)
         {
-            OnSpaceHold?.Invoke();
+            OnSpaceAction?.Invoke(true);
         }
-        // Если клавишу пробел отпустили, вызвать событие.
+
+        // Если клавиша пробел отпущена, вызвать событие.
         if (spaceUp)
         {
-            OnSpaceRelease?.Invoke();
+            OnSpaceAction?.Invoke(false);
         }
+
         // Если нажали левую кнопку мыши, вызвать событие.
         if (leftClick)
         {
             OnLeftClick?.Invoke();
         }
+
         // Если нажали кнопку 1 на клавиатуре, вызвать событие.
         if (oneButton)
         {
-            OnOneButtonPress?.Invoke();
+            OnOneButtonPress?.Invoke(1);
         }
+
         // Если нажали кнопку 2 на клавиатуре, вызвать событие.
         if (twoButton)
         {
-            OnTwoButtonPress?.Invoke();
+            OnTwoButtonPress?.Invoke(2);
         }
+
         // Если нажали кнопку 3 на клавиатуре, вызвать событие.
         if (threeButton)
         {
-            OnThreeButtonPress?.Invoke();
+            OnThreeButtonPress?.Invoke(3);
         }
+
         // Если нажали кнопку 4 на клавиатуре, вызвать событие.
         if (fourButton)
         {
-            OnFourButtonPress?.Invoke();
+            OnFourButtonPress?.Invoke(4);
         }
-        
     }
 }

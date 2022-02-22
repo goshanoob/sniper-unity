@@ -37,6 +37,11 @@ public class WeaponController : MonoBehaviour
     /// Максимальное количество снарядов, доступное в игре.
     /// </summary>
     private readonly int maxShellsCount = 5;
+
+    /// <summary>
+    /// Выстрел сделан.
+    /// </summary>
+    public event Action OnShot;
     
     /// <summary>
     /// Контроллер оружия.
@@ -102,8 +107,13 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Создать снаряды.
     /// </summary>
-    public void CrateShells()
+    public void CreateShells()
     {
+        // Если снаряды уже выпущены, завершить выполнение метода.
+        if (shells[0] != null)
+        {
+            return;
+        }
         Vector3 cameraDirection = mainCamera.transform.forward;
         for (int i = 0; i < CurrentShellsCount; i++)
         {
@@ -111,6 +121,8 @@ public class WeaponController : MonoBehaviour
             shells[i].transform.position = mainCamera.transform.position;
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
         }
+        // Опевестить слушателей о произведенном выстреле.
+        OnShot();
         // Уничтожить снаряды после создания.
         StartCoroutine(RemoveShells());
     }
@@ -128,5 +140,11 @@ public class WeaponController : MonoBehaviour
             Destroy(shell);
         }
         Array.Clear(shells, 0, shells.Length);
+    }
+    
+    public void ChangeWeapon(int weapon)
+    {
+        currentWeapon = weapon;
+        Debug.Log("Выбрано оружие " + weapon);
     }
 }

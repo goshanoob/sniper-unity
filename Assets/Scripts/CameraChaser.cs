@@ -6,14 +6,23 @@ using UnityEngine;
 public class CameraChaser : MonoBehaviour
 {
     /// <summary>
-    /// Экземпляр снаряда, за которым должна двигаться камера.
+    /// Оружие.
     /// </summary>
-    [SerializeField] private GameObject shell = null;
+    [SerializeField] private WeaponController weapon = null;
 
     /// <summary>
-    /// Переключатель возможности слежения за летящим снарядом.
+    /// Возможность слежения за летящим снарядом.
     /// </summary>
     private bool canChase = false;
+
+    /// <summary>
+    /// Режим слежения за летящим снарядом.
+    /// </summary>
+    public bool CanChase
+    {
+        get => canChase;
+        set => canChase = value;
+    }
 
     private void Update()
     {
@@ -21,17 +30,12 @@ public class CameraChaser : MonoBehaviour
         if (canChase)
         {
             // Положение летящего снаряда.
-            Vector3 shellPosition = shell.transform.position;
+            Vector3 shellPosition = weapon.Shells[0].transform.position;
             // Величина смещения камеры относитльно летящего сняряда (сзади, правее и выше).
             Vector3 cameraOffset = new Vector3(5f, 5f, -10f);
             // transform.position = shell.transform.position + cameraOffset;
             transform.position = Vector3.Lerp(transform.position, shellPosition + cameraOffset, Time.deltaTime);
             transform.LookAt(shellPosition);
         }
-    }
-
-    private void OnShot()
-    {
-        canChase = true;
     }
 }

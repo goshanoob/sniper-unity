@@ -9,14 +9,17 @@ public class GameSettings : MonoBehaviour
     /// Ссылка на единственный экземпляр данного класса.
     /// </summary>
     private static GameSettings instance = null;
+
     /// <summary>
     /// Возможные расстояния до мишени в соответствии с уровнянми игры..
     /// </summary>
     private float[] targetDistances = new float[] { 60f, 70f, 80f, 90f, 100f };
+
     /// <summary>
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 1;
+
     /// <summary>
     /// Количество очков, набранное на текущем уровне.
     /// </summary>
@@ -29,18 +32,15 @@ public class GameSettings : MonoBehaviour
     {
         get => instance;
     }
-    
+
     /// <summary>
     /// Расстояние до мишени в зависимости от текущего уровня игры.
     /// </summary>
     public float TargetDistance
     {
-        get
-        {
-            return targetDistances[currentLevel - 1];
-        }
+        get { return targetDistances[currentLevel - 1]; }
     }
-    
+
     /// <summary>
     /// Текущий уровень игры.
     /// </summary>
@@ -59,6 +59,9 @@ public class GameSettings : MonoBehaviour
         set => currentPoints = value;
     }
 
+    
+
+
     private void Start()
     {
         // Если ссылка на данный экземпляр не установлена, присвоить ее.
@@ -67,7 +70,7 @@ public class GameSettings : MonoBehaviour
         {
             instance = this;
         }
-        else if(instance == this)
+        else if (instance == this)
         {
             Destroy(gameObject);
         }

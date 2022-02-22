@@ -9,10 +9,12 @@ public class CameraRotator : MonoBehaviour
     /// Чувствительность камеры к движениям мыши.
     /// </summary>
     [SerializeField] private float sensitivity = 5f;
+
     /// <summary>
     /// Максимальный угол вращения камеры при наклоне вверх.
     /// </summary>
     [SerializeField] private float maxVerticalAngle = -90f;
+
     /// <summary>
     /// Минимальный угол вращения камеры при наклоне вниз.
     /// </summary>
@@ -22,11 +24,12 @@ public class CameraRotator : MonoBehaviour
     /// Текущий угол поворота камеры вокруг горизонтальной оси.
     /// </summary>
     private float currentXRotation = 0;
+
     /// <summary>
     /// Текущий угол поворота камеры вокруг вертикальной оси.
     /// </summary>
     private float currentYRotation = 0;
-    
+
     private void Update()
     {
         // Получить изменения вращения вокруг осей из-за движения мыши.
@@ -36,7 +39,7 @@ public class CameraRotator : MonoBehaviour
         currentXRotation += xRotation;
         currentYRotation += yRotation;
         // Ограничить величину вращения вокруг горизонтальной оси.
-        currentXRotation = Mathf.Clamp(currentXRotation,maxVerticalAngle, minVerticalAngle);
+        currentXRotation = Mathf.Clamp(currentXRotation, maxVerticalAngle, minVerticalAngle);
         // Изменить положение камеры.
         transform.localEulerAngles = new Vector3(currentXRotation, currentYRotation, 0);
     }
