@@ -30,17 +30,33 @@ public class CameraRotator : MonoBehaviour
     /// </summary>
     private float currentYRotation = 0;
 
+    /// <summary>
+    /// Возможность осматриваться, двигая мышь.
+    /// </summary>
+    private bool canRotate = true;
+
+    /// <summary>
+    /// Возможность вращать камеру мышью.
+    /// </summary>
+    public bool CanRotate
+    {
+        get => canRotate;
+        set => canRotate = value;
+    }
     private void Update()
     {
-        // Получить изменения вращения вокруг осей из-за движения мыши.
-        float yRotation = Input.GetAxis("Mouse X") * sensitivity;
-        float xRotation = Input.GetAxis("Mouse Y") * sensitivity;
-        // Вычислить новые текущие значения поворота камеры.
-        currentXRotation += xRotation;
-        currentYRotation += yRotation;
-        // Ограничить величину вращения вокруг горизонтальной оси.
-        currentXRotation = Mathf.Clamp(currentXRotation, maxVerticalAngle, minVerticalAngle);
-        // Изменить положение камеры.
-        transform.localEulerAngles = new Vector3(currentXRotation, currentYRotation, 0);
+        if (canRotate)
+        {
+            // Получить изменения вращения вокруг осей из-за движения мыши.
+            float yRotation = Input.GetAxis("Mouse X") * sensitivity;
+            float xRotation = Input.GetAxis("Mouse Y") * sensitivity;
+            // Вычислить новые текущие значения поворота камеры.
+            currentXRotation += xRotation;
+            currentYRotation += yRotation;
+            // Ограничить величину вращения вокруг горизонтальной оси.
+            currentXRotation = Mathf.Clamp(currentXRotation, maxVerticalAngle, minVerticalAngle);
+            // Изменить положение камеры.
+            transform.localEulerAngles = new Vector3(currentXRotation, currentYRotation, 0);
+        }
     }
 }

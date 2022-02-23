@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Генератор мишени.
+/// </summary>
 public class TargetCreator : MonoBehaviour
 {
     /// <summary>
@@ -14,6 +15,11 @@ public class TargetCreator : MonoBehaviour
     /// </summary>
     [SerializeField] private float cubeTargetMass = 0.2f;
 
+    /// <summary>
+    /// Количество кубов в мишени.
+    /// </summary>
+    private const int cubeCount = 49;
+    
     /// <summary>
     /// Сформировать мишень.
     /// </summary>

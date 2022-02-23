@@ -1,9 +1,19 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Определитель столкновений снаряда с поверхностями.
+/// </summary>
 public class ShellCollisionDetector : MonoBehaviour
 {
     private int points = 0;
+
+    /// <summary>
+    /// Столкновение с кубом мишени.
+    /// </summary>
+    public event Action OnTargetCollision;
+    
     /// <summary>
     /// Снярад столкнулся с поверхностью.
     /// </summary>
@@ -32,7 +42,7 @@ public class ShellCollisionDetector : MonoBehaviour
             return;
         }
         Debug.Log(points);
-        Destroy(gameObject);
+        OnTargetCollision();
     }
 
     /// <summary>

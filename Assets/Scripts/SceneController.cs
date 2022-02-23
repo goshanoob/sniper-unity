@@ -33,12 +33,6 @@ public class SceneController : MonoBehaviour
     /// </summary>
     [SerializeField] private TargetCreator targetCreator = null;
 
-
-    /// <summary>
-    /// Количество кубов в мишени.
-    /// </summary>
-    private const int cubeCount = 49;
-
     private float timer = 0;
     private bool isForward = true;
     private float x1 = -2f * Mathf.Sqrt(2);
@@ -55,7 +49,7 @@ public class SceneController : MonoBehaviour
         player.OnTwoButtonPress += weapon.ChangeWeapon;
         player.OnThreeButtonPress += weapon.ChangeWeapon;
         player.OnFourButtonPress += weapon.ChangeWeapon;
-        
+
         // Обработать событие выстрела из оружия.
         weapon.OnShot += cameraController.ChangeToChase;
     }

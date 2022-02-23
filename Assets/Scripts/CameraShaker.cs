@@ -1,16 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// Качание камеры.
+/// Качание камеры. Класс нужно капительно переписать.
 /// </summary>
 public class CameraShaker : MonoBehaviour
 {
+    /// <summary>
+    /// Фокальный радиус лемнискаты.
+    /// </summary>
     [SerializeField] private float a = 2f;
+
     /// <summary>
     /// Возможность качания камеры при прицеливинии.
     /// </summary>
     private bool canShake = true;
-    
+
     private float[] x = null;
     private float[] y = null;
 
@@ -29,7 +33,7 @@ public class CameraShaker : MonoBehaviour
         get => canShake;
         set => canShake = value;
     }
-    
+
     private void Start()
     {
         float squere = a * Mathf.Sqrt(2);
@@ -76,14 +80,14 @@ public class CameraShaker : MonoBehaviour
             {
                 dx = -dx;
             }
-            
+
 
             float y = Mathf.Sqrt(Mathf.Sqrt(Mathf.Pow(a, 4) + 4 * x1 * x1 * a * a) - x1 * x1 - a * a);
             if (!isForward)
             {
                 y = -y;
             }
-            
+
 
             nextPoint = new Vector3(x1, y, 50f);
             float different = (nextPoint - origin).magnitude;
