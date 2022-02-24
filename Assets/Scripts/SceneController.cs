@@ -45,6 +45,11 @@ public class SceneController : MonoBehaviour
     private float currentPoints = 0;
 
     /// <summary>
+    /// Количество очков, необходимое для перехода на следующий уровень.
+    /// </summary>
+    private readonly float toNextLevelPoints = 100;
+    
+    /// <summary>
     /// Текущий уровень игры.
     /// </summary>
     public int CurrentLevel
@@ -108,5 +113,26 @@ public class SceneController : MonoBehaviour
         }
 
         Debug.Log(currentPoints);
+        // Если набрано достаточное количество очков, перейти на следующий уровень.
+        if (currentPoints >= toNextLevelPoints)
+        {
+            StartNextLevel();
+        }
+    }
+
+    // Начать следующий уровень.
+    private void StartNextLevel()
+    {
+        currentLevel++;
+        // Если пройдены все уровни завершить игру.
+        if (currentLevel > settings.LevelCount)
+        {
+            return;
+        }
+        currentPoints = 0;
+        // Удалить старую мишень.
+        targetCreator.RemoveTarget();
+        // Добавить на сцену новую мишень.
+        targetCreator.CreateTarget();
     }
 }

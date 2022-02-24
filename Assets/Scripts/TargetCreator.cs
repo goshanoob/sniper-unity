@@ -16,16 +16,21 @@ public class TargetCreator : MonoBehaviour
     [SerializeField] private float cubeTargetMass = 0.5f;
 
     /// <summary>
+    /// Мишень.
+    /// </summary>
+    private GameObject target = null;
+
+    /// <summary>
     /// Количество кубов в мишени.
     /// </summary>
     private const int cubeCount = 49;
-    
+
     /// <summary>
     /// Сформировать мишень.
     /// </summary>
     public void CreateTarget()
     {
-        GameObject target = new GameObject("Target");
+        target = new GameObject("Target");
         target.transform.position = new Vector3(0, 0, settings.TargetDistance);
         Color[] colors = settings.TargetsColors;
 
@@ -76,4 +81,9 @@ public class TargetCreator : MonoBehaviour
             offsetX = -columnCount / 2.0f;
         }
     }
+
+    /// <summary>
+    /// Удалить мишень.
+    /// </summary>
+    public void RemoveTarget() => Destroy(target);
 }

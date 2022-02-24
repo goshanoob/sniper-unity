@@ -18,7 +18,7 @@ public class GameSettings : MonoBehaviour
     /// <summary>
     /// Размеры игрового поля.
     /// </summary>
-    private readonly float[] gameFieldSizes = new float[] { 30f, 100f };
+    private readonly float[] gameFieldSizes = new float[] { 30f, 110f };
 
     /// <summary>
     /// Количество очков в зависимости от цвета куба мишени.
@@ -30,6 +30,10 @@ public class GameSettings : MonoBehaviour
     /// </summary>
     private readonly Color[] targetsColors = new Color[] { Color.white, Color.blue, Color.red, Color.yellow };
 
+    /// <summary>
+    /// Количество уровней.
+    /// </summary>
+    private readonly int levelCount = 5;
 
     /// <summary>
     /// Расстояние до мишени в зависимости от текущего уровня игры.
@@ -55,8 +59,19 @@ public class GameSettings : MonoBehaviour
         get { return pointsRange; }
     }
 
+    /// <summary>
+    /// Цвета, доступные в мишени.
+    /// </summary>
     public Color[] TargetsColors
     {
         get { return targetsColors; }
+    }
+
+    /// <summary>
+    /// Количество уровней в игре.
+    /// </summary>
+    public int LevelCount
+    {
+        get { return levelCount; }
     }
 }
