@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -7,50 +6,32 @@ using UnityEngine;
 /// </summary>
 public class ShellCollisionDetector : MonoBehaviour
 {
-    private int points = 0;
-
     /// <summary>
     /// Столкновение с кубом мишени.
     /// </summary>
-    public event Action OnTargetCollision;
+    public event Action<Color> OnTargetCollision;
     
     /// <summary>
-    /// Снярад столкнулся с поверхностью.
+    /// Долгое соприкосновение.
+    /// </summary>
+    public event Action<float> OnLongCollision;
+
+    private void Update()
+    {
+        // Если вектор скорости близок к нулевому, вызвать событие остановки снаряда.
+        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < Mathf.Epsilon)
+        {
+            OnLongCollision(1f);
+        }
+    }
+
+    /// <summary>
+    /// Снаряд столкнулся с поверхностью.
     /// </summary>
     /// <param name="collision">Поверхность столкновения.</param>
     private void OnCollisionEnter(Collision collision)
     {
         Color color = collision.gameObject.GetComponent<Renderer>().materials[0].color;
-        if (color == Color.white)
-        {
-            points += 70;
-        }
-        else if (color == Color.blue)
-        {
-            points += 80;
-        }
-        else if (color == Color.red)
-        {
-            points += 90;
-        }
-        else if (color == Color.yellow)
-        {
-            points += 100;
-        }
-        else
-        {
-            return;
-        }
-        Debug.Log(points);
-        OnTargetCollision();
-    }
-
-    /// <summary>
-    /// Уничтожить снаряд.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator DestroyShell(){
-        yield return new WaitForSeconds(5);
-        Destroy(gameObject);
+        OnTargetCollision(color);
     }
 }

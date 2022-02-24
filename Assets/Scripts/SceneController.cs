@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,6 +9,11 @@ using UnityEngine.Serialization;
 /// </summary>
 public class SceneController : MonoBehaviour
 {
+    /// <summary>
+    /// Ссылка на единственный экземпляр данного класса SceneController.
+    /// </summary>
+    private static SceneController instance = null;
+
     /// <summary>
     /// Настройки игры.
     /// </summary>
@@ -33,29 +39,98 @@ public class SceneController : MonoBehaviour
     /// </summary>
     [SerializeField] private TargetCreator targetCreator = null;
 
-    private float timer = 0;
-    private bool isForward = true;
-    private float x1 = -2f * Mathf.Sqrt(2);
-    private float dx = 0.2f;
-    private float a = 2f;
+    /// <summary>
+    /// Текущий уровень игры.
+    /// </summary>
+    private int currentLevel = 1;
+
+    /// <summary>
+    /// Количество очков, набранное на текущем уровне.
+    /// </summary>
+    private int currentPoints = 0;
+
+    /// <summary>
+    /// Контроллер сцены.
+    /// </summary>
+    public static SceneController Instance
+    {
+        get => instance;
+    }
+
+    /// <summary>
+    /// Текущий уровень игры.
+    /// </summary>
+    public int CurrentLevel
+    {
+        get => currentLevel;
+        set => currentLevel = value;
+    }
+
+    /// <summary>
+    /// Количество очков, набранное на текущем уровне.
+    /// </summary>
+    public int Points
+    {
+        get => currentPoints;
+        set => currentPoints = value;
+    }
 
     private void Awake()
     {
         // Зарегистрировать обработчики событий в ответ на действия пользователя.
         player.OnLeftClick += weapon.CreateShells;
-        player.OnSpaceAction += cameraController.LookAtTarget;
-        player.OnSpaceAction += cameraController.LookAtTarget;
+        player.OnSpaceDown += cameraController.ShowTarget;
+        player.OnSpaceUp += cameraController.MoveToOrigin;
         player.OnOneButtonPress += weapon.ChangeWeapon;
         player.OnTwoButtonPress += weapon.ChangeWeapon;
         player.OnThreeButtonPress += weapon.ChangeWeapon;
         player.OnFourButtonPress += weapon.ChangeWeapon;
-
-        // Обработать событие выстрела из оружия.
-        weapon.OnShot += cameraController.ChangeToChase;
     }
 
     private void Start()
     {
+        // Если ссылка на данный экземпляр не установлена, присвоить ее.
+        // Если экземпляр уже существует, уничтожить текущий игровой объект.
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance == this)
+        {
+            Destroy(gameObject);
+        }
+
+        // Добавить на сцену мишень.
         targetCreator.CreateTarget();
+    }
+
+    /// <summary>
+    /// Начислить очки игроку.
+    /// </summary>
+    /// <param name="color"></param>
+    public void ScorePoints(Color color)
+    {
+        if (color == settings.TargetsColors[0])
+        {
+            currentPoints += settings.PointsRange[0];
+        }
+        else if (color == settings.TargetsColors[0])
+        {
+            currentPoints += settings.PointsRange[0];
+        }
+        else if (color == settings.TargetsColors[0])
+        {
+            currentPoints += settings.PointsRange[0];
+        }
+        else if (color == settings.TargetsColors[0])
+        {
+            currentPoints += settings.PointsRange[0];
+        }
+        else
+        {
+            return;
+        }
+
+        Debug.Log(currentPoints);
     }
 }

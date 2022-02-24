@@ -7,9 +7,14 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     /// <summary>
-    /// Событие взаимодействия с кнопкой пробел.
+    /// Событие нажатия клавиши пробел.
     /// </summary>
-    public event Action<bool> OnSpaceAction;
+    public event Action OnSpaceDown;
+
+    /// <summary>
+    /// Событие отпускания клавиши пробел.
+    /// </summary>
+    public event Action OnSpaceUp;
 
     /// <summary>
     /// Событие нажатия левой кнопки мыши.
@@ -17,22 +22,22 @@ public class PlayerControl : MonoBehaviour
     public event Action OnLeftClick;
 
     /// <summary>
-    /// Событие нажатия кнопки 1 на клавиатуре.
+    /// Событие нажатия клавиши 1 на клавиатуре.
     /// </summary>
     public event Action<int> OnOneButtonPress;
 
     /// <summary>
-    /// Событие нажатия кнопки 2 на клавиатуре.
+    /// Событие нажатия клавиши 2 на клавиатуре.
     /// </summary>
     public event Action<int> OnTwoButtonPress;
 
     /// <summary>
-    /// Событие нажатия кнопки 3 на клавиатуре.
+    /// Событие нажатия клавиши 3 на клавиатуре.
     /// </summary>
     public event Action<int> OnThreeButtonPress;
 
     /// <summary>
-    /// Событие нажатия кнопки 4 на клавиатуре.
+    /// Событие нажатия клавиши 4 на клавиатуре. 
     /// </summary>
     public event Action<int> OnFourButtonPress;
 
@@ -48,13 +53,13 @@ public class PlayerControl : MonoBehaviour
         // Если зажата клавиша пробел, вызвать событие.
         if (spaceDown)
         {
-            OnSpaceAction?.Invoke(true);
+            OnSpaceDown?.Invoke();
         }
 
         // Если клавиша пробел отпущена, вызвать событие.
         if (spaceUp)
         {
-            OnSpaceAction?.Invoke(false);
+            OnSpaceUp?.Invoke();
         }
 
         // Если нажали левую кнопку мыши, вызвать событие.

@@ -6,73 +6,57 @@ using UnityEngine;
 public class GameSettings : MonoBehaviour
 {
     /// <summary>
-    /// Ссылка на единственный экземпляр данного класса.
+    /// Контроллер сцены.
     /// </summary>
-    private static GameSettings instance = null;
+    [SerializeField] private SceneController sceneController = null;
 
     /// <summary>
-    /// Возможные расстояния до мишени в соответствии с уровнянми игры..
+    /// Возможные расстояния до мишени в соответствии с уровнями игры.
     /// </summary>
-    private float[] targetDistances = new float[] { 60f, 70f, 80f, 90f, 100f };
+    private readonly float[] targetDistances = new float[] { 60f, 70f, 80f, 90f, 100f };
 
     /// <summary>
-    /// Текущий уровень игры.
+    /// Размеры игрового поля.
     /// </summary>
-    private int currentLevel = 1;
+    private readonly float[] gameFieldSizes = new float[] { 30f, 100f };
 
     /// <summary>
-    /// Количество очков, набранное на текущем уровне.
+    /// Количество очков в зависимости от цвета куба мишени.
     /// </summary>
-    private int currentPoints = 0;
+    private readonly int[] pointsRange = new int[] { 70, 80, 90, 100 };
 
     /// <summary>
-    /// Настройки игры.
+    /// Цвета мишени от края к центру.
     /// </summary>
-    public static GameSettings Instance
-    {
-        get => instance;
-    }
+    private readonly Color[] targetsColors = new Color[] { Color.white, Color.blue, Color.red, Color.yellow };
+
 
     /// <summary>
     /// Расстояние до мишени в зависимости от текущего уровня игры.
     /// </summary>
     public float TargetDistance
     {
-        get { return targetDistances[currentLevel - 1]; }
+        get { return targetDistances[sceneController.CurrentLevel - 1]; }
     }
 
     /// <summary>
-    /// Текущий уровень игры.
+    /// Размеры игрового поля вдоль осей X и Z.
     /// </summary>
-    public int CurrentLevel
+    public float[] GameFieldSizes
     {
-        get => currentLevel;
-        set => currentLevel = value;
+        get { return gameFieldSizes; }
     }
 
     /// <summary>
-    /// Количество очков, набранное на текущем уровне.
+    /// Количество очков в зависимости от пораженного куба.
     /// </summary>
-    public int Points
+    public int[] PointsRange
     {
-        get => currentPoints;
-        set => currentPoints = value;
+        get { return pointsRange; }
     }
 
-    
-
-
-    private void Start()
+    public Color[] TargetsColors
     {
-        // Если ссылка на данный экземпляр не установлена, присвоить ее.
-        // Если экзепляр уже существует, уничтожить текущий игровой объект.
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance == this)
-        {
-            Destroy(gameObject);
-        }
+        get { return targetsColors; }
     }
 }

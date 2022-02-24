@@ -32,8 +32,8 @@ public class CameraChaser : MonoBehaviour
         {
             // Положение летящего снаряда.
             Vector3 shellPosition = shell.transform.position;
-            // Величина смещения камеры относитльно летящего сняряда (сзади, правее и выше).
-            Vector3 cameraOffset = new Vector3(3f, 5f, -9f);
+            // Величина смещения камеры относительно летящего снаряда (сзади, правее и выше).
+            Vector3 cameraOffset = new Vector3(3f, 3f, -9f);
             // transform.position = shell.transform.position + cameraOffset;
             transform.position = Vector3.Lerp(transform.position, shellPosition + cameraOffset, 0.9f);
             transform.LookAt(shellPosition);

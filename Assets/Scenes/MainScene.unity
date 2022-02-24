@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -296,7 +296,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 10}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1500956969}
@@ -333,7 +333,6 @@ MonoBehaviour:
   rotator: {fileID: 963194229}
   shaker: {fileID: 1500956970}
   chaser: {fileID: 963194231}
-  weapon: {fileID: 1949855893}
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c13ed106a37c450b8fe24b6ec27777d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneController: {fileID: 1949855890}
 --- !u!114 &1949855893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,8 +470,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 1949855892}
   shellPrefab: {fileID: 2509241775753120801, guid: 0c47dae9e2be91448bef3a4c7af7f4ce, type: 3}
-  mainCamera: {fileID: 963194227}
-  shotForce: 10
+  cameraController: {fileID: 963194230}
+  shotForce: 8
 --- !u!114 &1949855894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,7 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 1949855892}
-  cubeTargetMass: 0.2
+  cubeTargetMass: 0.5
 --- !u!114 &1949855895
 MonoBehaviour:
   m_ObjectHideFlags: 0

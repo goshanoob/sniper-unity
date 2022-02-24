@@ -13,7 +13,7 @@ public class TargetCreator : MonoBehaviour
     /// <summary>
     /// Масса куба мишени.
     /// </summary>
-    [SerializeField] private float cubeTargetMass = 0.2f;
+    [SerializeField] private float cubeTargetMass = 0.5f;
 
     /// <summary>
     /// Количество кубов в мишени.
@@ -27,7 +27,7 @@ public class TargetCreator : MonoBehaviour
     {
         GameObject target = new GameObject("Target");
         target.transform.position = new Vector3(0, 0, settings.TargetDistance);
-        Color[] colors = new Color[] { Color.white, Color.blue, Color.red, Color.yellow };
+        Color[] colors = settings.TargetsColors;
 
         int columnCount = 7;
         int rowCount = 7;
@@ -51,22 +51,22 @@ public class TargetCreator : MonoBehaviour
 
                 if (j == 0 || j == 6 || i == 0 || i == 6)
                 {
-                    cubeMaterial.color = Color.white;
+                    cubeMaterial.color = colors[0];
                 }
 
                 if (j >= 1 && j <= 5 && i >= 1 && i <= 5)
                 {
-                    cubeMaterial.color = Color.blue;
+                    cubeMaterial.color = colors[1];
                 }
 
                 if (j >= 2 && j <= 4 && i >= 2 && i <= 4)
                 {
-                    cubeMaterial.color = Color.red;
+                    cubeMaterial.color = colors[2];
                 }
 
                 if (j >= 3 && j <= 3 && i >= 3 && i <= 3)
                 {
-                    cubeMaterial.color = Color.yellow;
+                    cubeMaterial.color = colors[3];
                 }
 
                 offsetX += cubeSize;
