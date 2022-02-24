@@ -41,6 +41,17 @@ public class WeaponController : MonoBehaviour
     private readonly int maxShellsCount = 5;
 
     /// <summary>
+    /// Положения снарядов при создании.
+    /// </summary>
+    private readonly Vector3[] shellsPositions = new Vector3[]{
+        new Vector3(0, 0 ,0 ),
+        new Vector3(-0.4f, 0.4f, 0),
+        new Vector3(0.4f, 0.4f, 0),
+        new Vector3(-0.4f, -0.4f, 0),
+        new Vector3(0.4f, -0.4f, 0)
+    };
+    
+    /// <summary>
     /// Снаряды.
     /// </summary>
     public GameObject[] Shells
@@ -107,11 +118,11 @@ public class WeaponController : MonoBehaviour
         for (int i = 0; i < CurrentShellsCount; i++)
         {
             shells[i] = Instantiate<GameObject>(shellPrefab);
-            shells[i].transform.position = cameraController.CameraOrigin;
+            shells[i].transform.position = cameraController.CameraOrigin + shellsPositions[i];
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
             shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += OnTargetCollisionEventHandler;
-            shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += SceneController.Instance.ScorePoints;
             shells[i].GetComponent<ShellCollisionDetector>().OnLongCollision += OnLongCollisionEventHandler;
+            shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += SceneController.Instance.ScorePoints;
         }
 
         // Переключить камеру в режим следования за снарядом.
@@ -199,7 +210,6 @@ public class WeaponController : MonoBehaviour
                 shell.GetComponent<ShellCollisionDetector>().OnTargetCollision -= OnTargetCollisionEventHandler;
                 shell.GetComponent<ShellCollisionDetector>().OnLongCollision -= OnLongCollisionEventHandler;
                 shell.GetComponent<ShellCollisionDetector>().OnTargetCollision -= SceneController.Instance.ScorePoints;
-                ;
                 Destroy(shell);
             }
         }

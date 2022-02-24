@@ -114,17 +114,17 @@ public class SceneController : MonoBehaviour
         {
             currentPoints += settings.PointsRange[0];
         }
-        else if (color == settings.TargetsColors[0])
+        else if (color == settings.TargetsColors[1])
         {
-            currentPoints += settings.PointsRange[0];
+            currentPoints += settings.PointsRange[1];
         }
-        else if (color == settings.TargetsColors[0])
+        else if (color == settings.TargetsColors[2])
         {
-            currentPoints += settings.PointsRange[0];
+            currentPoints += settings.PointsRange[2];
         }
-        else if (color == settings.TargetsColors[0])
+        else if (color == settings.TargetsColors[3])
         {
-            currentPoints += settings.PointsRange[0];
+            currentPoints += settings.PointsRange[3];
         }
         else
         {

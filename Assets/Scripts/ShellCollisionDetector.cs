@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class ShellCollisionDetector : MonoBehaviour
 {
+    private bool wasCollised = false;
+    
     /// <summary>
     /// Столкновение с кубом мишени.
     /// </summary>
@@ -31,7 +33,11 @@ public class ShellCollisionDetector : MonoBehaviour
     /// <param name="collision">Поверхность столкновения.</param>
     private void OnCollisionEnter(Collision collision)
     {
-        Color color = collision.gameObject.GetComponent<Renderer>().materials[0].color;
-        OnTargetCollision(color);
+        if (!wasCollised)
+        {
+            Color color = collision.gameObject.GetComponent<Renderer>().materials[0].color;
+            wasCollised = true;
+            OnTargetCollision(color);
+        }
     }
 }
