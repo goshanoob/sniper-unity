@@ -471,6 +471,7 @@ MonoBehaviour:
   settings: {fileID: 1949855892}
   shellPrefab: {fileID: 2509241775753120801, guid: 0c47dae9e2be91448bef3a4c7af7f4ce, type: 3}
   cameraController: {fileID: 963194230}
+  sceneController: {fileID: 1949855890}
   shotForce: 8
 --- !u!114 &1949855894
 MonoBehaviour:

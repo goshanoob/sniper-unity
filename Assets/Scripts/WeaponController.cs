@@ -21,6 +21,11 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private CameraController cameraController = null;
 
     /// <summary>
+    /// Контроллер сцены.
+    /// </summary>
+    [SerializeField] private SceneController sceneController = null;
+
+    /// <summary>
     /// Сила выстрела снарядом.
     /// </summary>
     [SerializeField] private float shotForce = 8f;
@@ -43,14 +48,15 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Положения снарядов при создании.
     /// </summary>
-    private readonly Vector3[] shellsPositions = new Vector3[]{
-        new Vector3(0, 0 ,0 ),
+    private readonly Vector3[] shellsPositions = new Vector3[]
+    {
+        new Vector3(0, 0, 0),
         new Vector3(-0.4f, 0.4f, 0),
         new Vector3(0.4f, 0.4f, 0),
         new Vector3(-0.4f, -0.4f, 0),
         new Vector3(0.4f, -0.4f, 0)
     };
-    
+
     /// <summary>
     /// Снаряды.
     /// </summary>
@@ -88,6 +94,39 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    // Множитель начисления очков в зависимости от выбранного оружия.
+    public float CurrentMultiplicator
+    {
+        get
+        {
+            float multiplicator = 0.5f;
+            switch (currentWeapon)
+            {
+                case 1:
+                    multiplicator = 0.5f;
+                    break;
+
+                case 2:
+                    multiplicator = 1f;
+                    break;
+
+                case 3:
+                    multiplicator = 0.1f;
+                    break;
+
+                case 4:
+                    multiplicator = 0.2f;
+                    break;
+
+                default:
+                    multiplicator = 0.5f;
+                    break;
+            }
+
+            return multiplicator;
+        }
+    }
+
     private void Start()
     {
         // Выделить память для массива снарядов.
@@ -122,7 +161,6 @@ public class WeaponController : MonoBehaviour
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
             shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += OnTargetCollisionEventHandler;
             shells[i].GetComponent<ShellCollisionDetector>().OnLongCollision += OnLongCollisionEventHandler;
-            shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += SceneController.Instance.ScorePoints;
         }
 
         // Переключить камеру в режим следования за снарядом.
@@ -151,6 +189,9 @@ public class WeaponController : MonoBehaviour
         {
             return;
         }
+
+        // Начислить игроку очки.
+        sceneController.ScorePoints(color);
 
         // Удалить снаряды со сцены и показать мишень на несколько секунд.
         StartCoroutine(cameraController.ShowTargetForTime());
@@ -209,7 +250,6 @@ public class WeaponController : MonoBehaviour
             {
                 shell.GetComponent<ShellCollisionDetector>().OnTargetCollision -= OnTargetCollisionEventHandler;
                 shell.GetComponent<ShellCollisionDetector>().OnLongCollision -= OnLongCollisionEventHandler;
-                shell.GetComponent<ShellCollisionDetector>().OnTargetCollision -= SceneController.Instance.ScorePoints;
                 Destroy(shell);
             }
         }

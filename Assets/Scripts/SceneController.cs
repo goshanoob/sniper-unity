@@ -10,11 +10,6 @@ using UnityEngine.Serialization;
 public class SceneController : MonoBehaviour
 {
     /// <summary>
-    /// Ссылка на единственный экземпляр данного класса SceneController.
-    /// </summary>
-    private static SceneController instance = null;
-
-    /// <summary>
     /// Настройки игры.
     /// </summary>
     [SerializeField] private GameSettings settings = null;
@@ -47,15 +42,7 @@ public class SceneController : MonoBehaviour
     /// <summary>
     /// Количество очков, набранное на текущем уровне.
     /// </summary>
-    private int currentPoints = 0;
-
-    /// <summary>
-    /// Контроллер сцены.
-    /// </summary>
-    public static SceneController Instance
-    {
-        get => instance;
-    }
+    private float currentPoints = 0;
 
     /// <summary>
     /// Текущий уровень игры.
@@ -69,7 +56,7 @@ public class SceneController : MonoBehaviour
     /// <summary>
     /// Количество очков, набранное на текущем уровне.
     /// </summary>
-    public int Points
+    public float Points
     {
         get => currentPoints;
         set => currentPoints = value;
@@ -89,17 +76,6 @@ public class SceneController : MonoBehaviour
 
     private void Start()
     {
-        // Если ссылка на данный экземпляр не установлена, присвоить ее.
-        // Если экземпляр уже существует, уничтожить текущий игровой объект.
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance == this)
-        {
-            Destroy(gameObject);
-        }
-
         // Добавить на сцену мишень.
         targetCreator.CreateTarget();
     }
@@ -112,19 +88,19 @@ public class SceneController : MonoBehaviour
     {
         if (color == settings.TargetsColors[0])
         {
-            currentPoints += settings.PointsRange[0];
+            currentPoints += settings.PointsRange[0] * weapon.CurrentMultiplicator;
         }
         else if (color == settings.TargetsColors[1])
         {
-            currentPoints += settings.PointsRange[1];
+            currentPoints += settings.PointsRange[1] * weapon.CurrentMultiplicator;
         }
         else if (color == settings.TargetsColors[2])
         {
-            currentPoints += settings.PointsRange[2];
+            currentPoints += settings.PointsRange[2] * weapon.CurrentMultiplicator;
         }
         else if (color == settings.TargetsColors[3])
         {
-            currentPoints += settings.PointsRange[3];
+            currentPoints += settings.PointsRange[3] * weapon.CurrentMultiplicator;
         }
         else
         {
