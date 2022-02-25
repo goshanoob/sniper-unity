@@ -41,6 +41,11 @@ public class WeaponController : MonoBehaviour
     private GameObject[] shells = null;
 
     /// <summary>
+    /// Количество произведенных выстрелов.
+    /// </summary>
+    private int shotsCount = 0;
+
+    /// <summary>
     /// Максимальное количество снарядов, доступное в игре.
     /// </summary>
     private readonly int maxShellsCount = 5;
@@ -58,6 +63,14 @@ public class WeaponController : MonoBehaviour
     };
 
     /// <summary>
+    /// Выбранное оружие.
+    /// </summary>
+    public int CurrentWeapon
+    {
+        get => currentWeapon;
+    }
+
+    /// <summary>
     /// Снаряды.
     /// </summary>
     public GameObject[] Shells
@@ -68,7 +81,7 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество снарядов в зависимости от выбранного оружия.
     /// </summary>
-    public int CurrentShellsCount
+    private int CurrentShellsCount
     {
         get
         {
@@ -127,6 +140,14 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Количество выполненных выстрелов.
+    /// </summary>
+    public int ShotsCount
+    {
+        get => shotsCount;
+    }
+    
     private void Start()
     {
         // Выделить память для массива снарядов.
@@ -163,6 +184,8 @@ public class WeaponController : MonoBehaviour
             shells[i].GetComponent<ShellCollisionDetector>().OnLongCollision += OnLongCollisionEventHandler;
         }
 
+        // Учесть выстрел.
+        shotsCount++;
         // Переключить камеру в режим следования за снарядом.
         cameraController.ChangeToChase();
     }

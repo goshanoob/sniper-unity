@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Управление со стороны игрока.
@@ -63,7 +64,7 @@ public class PlayerControl : MonoBehaviour
         }
 
         // Если нажали левую кнопку мыши, вызвать событие.
-        if (leftClick)
+        if (leftClick && !EventSystem.current.IsPointerOverGameObject())
         {
             OnLeftClick?.Invoke();
         }

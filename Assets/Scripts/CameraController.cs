@@ -25,11 +25,16 @@ public class CameraController : MonoBehaviour
     /// Преследование камерой летящего снаряда.
     /// </summary>
     [SerializeField] private CameraChaser chaser = null;
+    
+    /// <summary>
+    /// Контроллер графического интерфейса.
+    /// </summary>
+    [SerializeField] private UIController uiController = null;
 
     /// <summary>
     /// Положение камеры в режиме прицеливания.
     /// </summary>
-    private Vector3 cameraOrigin = new Vector3(0, 2, 0);
+    private readonly Vector3 cameraOrigin = new Vector3(0, 2, 0);
 
     /// <summary>
     /// Положение камеры в позиции прицеливания.
@@ -80,6 +85,7 @@ public class CameraController : MonoBehaviour
         transform.position = cameraOrigin;
         shaker.CanShake = true;
         rotator.CanRotate = true;
+        uiController.ToggleAim(true);
     }
 
     /// <summary>
@@ -90,5 +96,6 @@ public class CameraController : MonoBehaviour
         rotator.CanRotate = false;
         shaker.CanShake = false;
         chaser.CanChase = true;
+        uiController.ToggleAim(false);
     }
 }

@@ -35,6 +35,11 @@ public class SceneController : MonoBehaviour
     [SerializeField] private TargetCreator targetCreator = null;
 
     /// <summary>
+    /// Контроллер графического интерфейса.
+    /// </summary>
+    [SerializeField] private UIController uiController = null;
+
+    /// <summary>
     /// Текущий уровень игры.
     /// </summary>
     private int currentLevel = 1;
@@ -48,7 +53,7 @@ public class SceneController : MonoBehaviour
     /// Количество очков, необходимое для перехода на следующий уровень.
     /// </summary>
     private readonly float toNextLevelPoints = 100;
-    
+
     /// <summary>
     /// Текущий уровень игры.
     /// </summary>
@@ -83,6 +88,11 @@ public class SceneController : MonoBehaviour
     {
         // Добавить на сцену мишень.
         targetCreator.CreateTarget();
+        // Вывести статистику игры пользователю.
+        uiController.PrintLevel(currentLevel);
+        uiController.PrintPoints(currentPoints);
+        uiController.PrintWeapon(weapon.CurrentWeapon);
+        uiController.PrintShots(weapon.ShotsCount);
     }
 
     /// <summary>
@@ -129,6 +139,7 @@ public class SceneController : MonoBehaviour
         {
             return;
         }
+
         currentPoints = 0;
         // Удалить старую мишень.
         targetCreator.RemoveTarget();
