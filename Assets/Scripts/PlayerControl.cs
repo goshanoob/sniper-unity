@@ -23,24 +23,9 @@ public class PlayerControl : MonoBehaviour
     public event Action OnLeftClick;
 
     /// <summary>
-    /// Событие нажатия клавиши 1 на клавиатуре.
+    /// Событие нажатия цифровой клавиши 1-4 на клавиатуре.
     /// </summary>
-    public event Action<int> OnOneButtonPress;
-
-    /// <summary>
-    /// Событие нажатия клавиши 2 на клавиатуре.
-    /// </summary>
-    public event Action<int> OnTwoButtonPress;
-
-    /// <summary>
-    /// Событие нажатия клавиши 3 на клавиатуре.
-    /// </summary>
-    public event Action<int> OnThreeButtonPress;
-
-    /// <summary>
-    /// Событие нажатия клавиши 4 на клавиатуре. 
-    /// </summary>
-    public event Action<int> OnFourButtonPress;
+    public event Action<int> OnNumButtonPress;
 
     private void Update()
     {
@@ -72,25 +57,25 @@ public class PlayerControl : MonoBehaviour
         // Если нажали кнопку 1 на клавиатуре, вызвать событие.
         if (oneButton)
         {
-            OnOneButtonPress?.Invoke(1);
+            OnNumButtonPress?.Invoke(1);
         }
 
         // Если нажали кнопку 2 на клавиатуре, вызвать событие.
         if (twoButton)
         {
-            OnTwoButtonPress?.Invoke(2);
+            OnNumButtonPress?.Invoke(2);
         }
 
         // Если нажали кнопку 3 на клавиатуре, вызвать событие.
         if (threeButton)
         {
-            OnThreeButtonPress?.Invoke(3);
+            OnNumButtonPress?.Invoke(3);
         }
 
         // Если нажали кнопку 4 на клавиатуре, вызвать событие.
         if (fourButton)
         {
-            OnFourButtonPress?.Invoke(4);
+            OnNumButtonPress?.Invoke(4);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,12 +38,18 @@ public class UIController : MonoBehaviour
     [SerializeField] private Image aim = null;
 
     /// <summary>
+    /// Номер уровня большими буквами.
+    /// </summary>
+    [SerializeField] private Text levelBigText = null;
+    
+    /// <summary>
     /// Вывести текущий уровень игры.
     /// </summary>
     /// <param name="level">Уровень игры.</param>
     public void PrintLevel(int level)
     {
         levelText.text = $"Уровень игры: {level.ToString()}";
+        StartCoroutine(ShowLevel(level));
     }
 
     /// <summary>
@@ -88,5 +95,16 @@ public class UIController : MonoBehaviour
     public void ToggleAim(bool isVisible)
     {
         aim.gameObject.SetActive(isVisible);
+    }
+
+    /// <summary>
+    /// Показать номер уровня большими буквами.
+    /// </summary>
+    /// <param name="level"></param>
+    private IEnumerator ShowLevel(int level)
+    {
+        levelBigText.text = $"Level {level.ToString()}";
+        yield return new WaitForSeconds(2f);
+        levelBigText.text = "";
     }
 }

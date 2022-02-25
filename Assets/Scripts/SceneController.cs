@@ -78,10 +78,8 @@ public class SceneController : MonoBehaviour
         player.OnLeftClick += weapon.CreateShells;
         player.OnSpaceDown += cameraController.ShowTarget;
         player.OnSpaceUp += cameraController.MoveToOrigin;
-        player.OnOneButtonPress += weapon.ChangeWeapon;
-        player.OnTwoButtonPress += weapon.ChangeWeapon;
-        player.OnThreeButtonPress += weapon.ChangeWeapon;
-        player.OnFourButtonPress += weapon.ChangeWeapon;
+        player.OnNumButtonPress += weapon.ChangeWeapon;
+        player.OnNumButtonPress += uiController.PrintWeapon;
     }
 
     private void Start()
@@ -103,26 +101,26 @@ public class SceneController : MonoBehaviour
     {
         if (color == settings.TargetsColors[0])
         {
-            currentPoints += settings.PointsRange[0] * weapon.CurrentMultiplicator;
+            currentPoints += settings.PointsRange[0] * weapon.CurrentMultiplier;
         }
         else if (color == settings.TargetsColors[1])
         {
-            currentPoints += settings.PointsRange[1] * weapon.CurrentMultiplicator;
+            currentPoints += settings.PointsRange[1] * weapon.CurrentMultiplier;
         }
         else if (color == settings.TargetsColors[2])
         {
-            currentPoints += settings.PointsRange[2] * weapon.CurrentMultiplicator;
+            currentPoints += settings.PointsRange[2] * weapon.CurrentMultiplier;
         }
         else if (color == settings.TargetsColors[3])
         {
-            currentPoints += settings.PointsRange[3] * weapon.CurrentMultiplicator;
+            currentPoints += settings.PointsRange[3] * weapon.CurrentMultiplier;
         }
         else
         {
             return;
         }
 
-        Debug.Log(currentPoints);
+        uiController.PrintPoints(currentPoints);
         // Если набрано достаточное количество очков, перейти на следующий уровень.
         if (currentPoints >= toNextLevelPoints)
         {
@@ -130,20 +128,45 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    // Начать следующий уровень.
+    /// <summary>
+    /// Начать следующий уровень.
+    /// </summary>
     private void StartNextLevel()
     {
         currentLevel++;
-        // Если пройдены все уровни завершить игру.
+        // Если пройдены все уровни, завершить игру.
         if (currentLevel > settings.LevelCount)
         {
+            uiController.OpenPopupWindow("Вы победили! Ура!");
             return;
         }
-
+        // Сбросить количество очков.
         currentPoints = 0;
         // Удалить старую мишень.
         targetCreator.RemoveTarget();
         // Добавить на сцену новую мишень.
         targetCreator.CreateTarget();
+        
+        // Обновить графический интерфейс.
+        uiController.PrintPoints(currentPoints);
+        uiController.PrintLevel(currentLevel);
+    }
+
+    /// <summary>
+    /// Окончить игру из-за проигрыша.
+    /// </summary>
+    public void ShowGameOver()
+    {
+        uiController.OpenPopupWindow("Вы проиграли. Увы.");
+    }
+
+    public void ChangeShots()
+    {
+        int delta = weapon.ShotsCount - weapon.ShotsCounter;
+        uiController.PrintShots(delta);
+        if (delta <= 0)
+        {
+            ShowGameOver();
+        }
     }
 }

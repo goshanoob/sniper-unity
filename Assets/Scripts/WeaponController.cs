@@ -11,11 +11,6 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private GameSettings settings = null;
 
     /// <summary>
-    /// Префаб снаряда.
-    /// </summary>
-    [SerializeField] private GameObject shellPrefab = null;
-
-    /// <summary>
     /// Камера на сцене.
     /// </summary>
     [SerializeField] private CameraController cameraController = null;
@@ -43,7 +38,7 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество произведенных выстрелов.
     /// </summary>
-    private int shotsCount = 0;
+    private int shotsCounter = 0;
 
     /// <summary>
     /// Максимальное количество снарядов, доступное в игре.
@@ -61,6 +56,21 @@ public class WeaponController : MonoBehaviour
         new Vector3(-0.4f, -0.4f, 0),
         new Vector3(0.4f, -0.4f, 0)
     };
+
+    /// <summary>
+    /// Количество снарядов в соответствии с выбранным оружием.
+    /// </summary>
+    private readonly int[] shellsCount = new int[] { 1, 1, 5, 5 };
+
+    /// <summary>
+    /// Множители количества очков в соответствии с выбранным оружием.
+    /// </summary>
+    private readonly float[] multipliers = new float[] { 0.5f, 1f, 0.1f, 0.2f };
+
+    /// <summary>
+    /// Количество доступных выстрелов в соответствии с выбранным оружием.
+    /// </summary>
+    private readonly int[] shotsCount = new int[] { 3, 2, 3, 2 };
 
     /// <summary>
     /// Выбранное оружие.
@@ -83,71 +93,28 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private int CurrentShellsCount
     {
-        get
-        {
-            int count = 1;
-            switch (currentWeapon)
-            {
-                case 1:
-                case 2:
-                    count = 1;
-                    break;
-
-                case 3:
-                case 4:
-                    count = 5;
-                    break;
-
-                default:
-                    count = 1;
-                    break;
-            }
-
-            return count;
-        }
+        get => shellsCount[currentWeapon];
     }
 
     // Множитель начисления очков в зависимости от выбранного оружия.
-    public float CurrentMultiplicator
+    public float CurrentMultiplier
     {
-        get
-        {
-            float multiplicator = 0.5f;
-            switch (currentWeapon)
-            {
-                case 1:
-                    multiplicator = 0.5f;
-                    break;
-
-                case 2:
-                    multiplicator = 1f;
-                    break;
-
-                case 3:
-                    multiplicator = 0.1f;
-                    break;
-
-                case 4:
-                    multiplicator = 0.2f;
-                    break;
-
-                default:
-                    multiplicator = 0.5f;
-                    break;
-            }
-
-            return multiplicator;
-        }
+        get => multipliers[currentWeapon];
     }
 
     /// <summary>
     /// Количество выполненных выстрелов.
     /// </summary>
-    public int ShotsCount
+    public int ShotsCounter
     {
-        get => shotsCount;
+        get => shotsCounter;
     }
     
+    public int ShotsCount
+    {
+        get => shotsCount[shotsCounter];
+    }
+
     private void Start()
     {
         // Выделить память для массива снарядов.
@@ -174,20 +141,39 @@ public class WeaponController : MonoBehaviour
             return;
         }
 
+        // Определить положение и ориентацию камеры.
         Vector3 cameraDirection = cameraController.gameObject.transform.forward;
         for (int i = 0; i < CurrentShellsCount; i++)
         {
-            shells[i] = Instantiate<GameObject>(shellPrefab);
+            // Получить экземпляр снаряда.
+            shells[i] = GetShellInstance();
             shells[i].transform.position = cameraController.CameraOrigin + shellsPositions[i];
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
-            shells[i].GetComponent<ShellCollisionDetector>().OnTargetCollision += OnTargetCollisionEventHandler;
-            shells[i].GetComponent<ShellCollisionDetector>().OnLongCollision += OnLongCollisionEventHandler;
         }
 
         // Учесть выстрел.
-        shotsCount++;
+        CheckShotsCount();
         // Переключить камеру в режим следования за снарядом.
         cameraController.ChangeToChase();
+    }
+
+    /// <summary>
+    /// Сгенерировать снаряд.
+    /// </summary>
+    /// <returns>Снаряд.</returns>
+    private GameObject GetShellInstance()
+    {
+        GameObject shell = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Rigidbody body = shell.AddComponent<Rigidbody>();
+        ShellCollisionDetector detector = shell.AddComponent<ShellCollisionDetector>();
+        shell.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        body.mass = 0.2f;
+        // Выбрать постоянный режим определения коллизий.
+        body.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        // Зарегистрировать обработчики событий в результате коллизий.
+        detector.OnTargetCollision += OnTargetCollisionEventHandler;
+        detector.OnLongCollision += OnLongCollisionEventHandler;
+        return shell;
     }
 
     /// <summary>
@@ -222,7 +208,7 @@ public class WeaponController : MonoBehaviour
     }
 
     /// <summary>
-    /// Обработчкик события слишком долгого соприкосновения снаряда с поверхностью.
+    /// Обработчик события потери снарядом скорости.
     /// </summary>
     /// <param name="time"></param>
     private void OnLongCollisionEventHandler(float time)
@@ -271,8 +257,9 @@ public class WeaponController : MonoBehaviour
             // Отписаться от событий класса-компонента перед удалением объекта.
             if (shell != null)
             {
-                shell.GetComponent<ShellCollisionDetector>().OnTargetCollision -= OnTargetCollisionEventHandler;
-                shell.GetComponent<ShellCollisionDetector>().OnLongCollision -= OnLongCollisionEventHandler;
+                ShellCollisionDetector detector = shell.GetComponent<ShellCollisionDetector>();
+                detector.OnTargetCollision -= OnTargetCollisionEventHandler;
+                detector.OnLongCollision -= OnLongCollisionEventHandler;
                 Destroy(shell);
             }
         }
@@ -288,6 +275,11 @@ public class WeaponController : MonoBehaviour
     public void ChangeWeapon(int weapon)
     {
         currentWeapon = weapon;
-        Debug.Log("Выбрано оружие " + weapon);
+    }
+
+    private void CheckShotsCount()
+    {
+        shotsCounter++;
+        sceneController.ChangeShots();
     }
 }
