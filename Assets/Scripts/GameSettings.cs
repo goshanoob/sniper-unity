@@ -40,7 +40,7 @@ public class GameSettings : MonoBehaviour
     /// </summary>
     public float TargetDistance
     {
-        get { return targetDistances[sceneController.CurrentLevel - 1]; }
+        get => targetDistances[sceneController.CurrentLevel - 1];
     }
 
     /// <summary>

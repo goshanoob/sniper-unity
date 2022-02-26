@@ -38,9 +38,14 @@ public class UIController : MonoBehaviour
     [SerializeField] private Image aim = null;
 
     /// <summary>
-    /// Номер уровня большими буквами.
+    /// Сообщение большими буквами.
     /// </summary>
-    [SerializeField] private Text levelBigText = null;
+    [SerializeField] private Text bigMessage = null;
+    
+    /// <summary>
+    /// Сообщение маленькими буквами.
+    /// </summary>
+    [SerializeField] private Text smallMessage = null;
     
     /// <summary>
     /// Вывести текущий уровень игры.
@@ -64,7 +69,7 @@ public class UIController : MonoBehaviour
     /// <summary>
     /// Вывести номер выбранного оружия.
     /// </summary>
-    /// <param name="weapon"></param>
+    /// <param name="weapon">Номер оружия.</param>
     public void PrintWeapon(int weapon)
     {
         weaponText.text = $"Оружие #: {weapon.ToString()}";
@@ -98,13 +103,33 @@ public class UIController : MonoBehaviour
     }
 
     /// <summary>
+    /// Показать сообщение маленькими буквами.
+    /// </summary>
+    /// <param name="message">Текст сообщения.</param>
+    public void ShowMessage(string message)
+    {
+        StartCoroutine(PrintText(message));
+    }
+
+    /// <summary>
     /// Показать номер уровня большими буквами.
     /// </summary>
-    /// <param name="level"></param>
+    /// <param name="level">Номер уровня.</param>
     private IEnumerator ShowLevel(int level)
     {
-        levelBigText.text = $"Level {level.ToString()}";
+        bigMessage.text = $"Level {level.ToString()}";
         yield return new WaitForSeconds(2f);
-        levelBigText.text = "";
+        bigMessage.text = "";
+    }
+
+    /// <summary>
+    /// Показать временный текст сообщения.
+    /// </summary>
+    /// <param name="text">Текст.</param>
+    private IEnumerator PrintText(string text)
+    {
+        smallMessage.text = text;
+        yield return new WaitForSeconds(1f);
+        smallMessage.text = "";
     }
 }

@@ -14,12 +14,12 @@ public class ShellCollisionDetector : MonoBehaviour
     /// <summary>
     /// Событие столкновения с кубом мишени.
     /// </summary>
-    public event Action<float> OnTargetCollision;
+    public event Action<GameObject, float> OnTargetCollision;
     
     /// <summary>
     /// Событие промаха.
     /// </summary>
-    public event Action OnMissed;
+    public event EventHandler OnMissed;
 
     /// <summary>
     /// Снаряд столкнулся с поверхностью.
@@ -35,11 +35,11 @@ public class ShellCollisionDetector : MonoBehaviour
             if (targetsCube != null)
             {
                 // Передать стоимость попадания в куб мишени.
-                OnTargetCollision(targetsCube.Cost);
+                OnTargetCollision(gameObject, targetsCube.Cost);
             }
             else
             {
-                OnMissed();
+                OnMissed(gameObject, EventArgs.Empty);
             }
             canCollised = false;
         }

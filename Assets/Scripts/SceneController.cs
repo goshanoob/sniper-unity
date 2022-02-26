@@ -60,25 +60,16 @@ public class SceneController : MonoBehaviour
     public int CurrentLevel
     {
         get => currentLevel;
-        set => currentLevel = value;
-    }
-
-    /// <summary>
-    /// Количество очков, набранное на текущем уровне.
-    /// </summary>
-    public float Points
-    {
-        get => currentPoints;
-        set => currentPoints = value;
     }
 
     private void Awake()
     {
         // Зарегистрировать обработчики событий в ответ на действия пользователя.
-        player.OnLeftClick += weapon.CreateShells;
+        player.OnLeftClick += weapon.MakeShot;
         player.OnSpaceDown += cameraController.ShowTarget;
         player.OnSpaceUp += cameraController.MoveToOrigin;
         player.OnNumButtonPress += weapon.ChangeWeapon;
+        // Выполнить только в начале уровня.
         player.OnNumButtonPress += uiController.PrintWeapon;
 
         weapon.OnShot += () => { };
@@ -96,21 +87,6 @@ public class SceneController : MonoBehaviour
     }
 
     /// <summary>
-    /// Начислить очки игроку.
-    /// </summary>
-    /// <param name="color"></param>
-    public void ScorePoints(float points)
-    {
-        currentPoints += points * weapon.CurrentMultiplier;
-        uiController.PrintPoints(currentPoints);
-        // Если набрано достаточное количество очков, перейти на следующий уровень.
-        if (currentPoints >= toNextLevelPoints)
-        {
-            StartNextLevel();
-        }
-    }
-
-    /// <summary>
     /// Начать следующий уровень.
     /// </summary>
     private void StartNextLevel()
@@ -119,36 +95,63 @@ public class SceneController : MonoBehaviour
         // Если пройдены все уровни, завершить игру.
         if (currentLevel > settings.LevelCount)
         {
+            cameraController.ShowTarget();
             uiController.OpenPopupWindow("Вы победили! Ура!");
             return;
         }
-        // Сбросить количество очков.
+        // Сбросить количество очков и выстрелов.
         currentPoints = 0;
-        // Удалить старую мишень.
+        weapon.RechargeWeapon();
+        // Удалить старую мишень и добавить новую.
         targetCreator.RemoveTarget();
-        // Добавить на сцену новую мишень.
         targetCreator.CreateTarget();
         
         // Обновить графический интерфейс.
         uiController.PrintPoints(currentPoints);
         uiController.PrintLevel(currentLevel);
+        uiController.PrintShots(weapon.MaxShots);
     }
 
     /// <summary>
     /// Окончить игру из-за проигрыша.
     /// </summary>
-    public void ShowGameOver()
+    private void ShowGameOver()
     {
+        cameraController.ShowTarget();
         uiController.OpenPopupWindow("Вы проиграли. Увы.");
     }
-
-    public void ChangeShots()
+    
+    /// <summary>
+    /// Начислить очки игроку и учесть выстрелы.
+    /// </summary>
+    /// <param name="points">Количество очков.</param>
+    /// <param name="shots">Оставшиеся выстрелы.</param>
+    public void ScorePointsAndShots(float points, int shots)
     {
-        int delta = weapon.MaxShots - weapon.ShotsCounter;
-        uiController.PrintShots(delta);
-        if (delta <= 0)
+        currentPoints += points * weapon.CurrentMultiplier;
+        uiController.PrintPoints(currentPoints);
+        uiController.PrintShots(shots);
+        // Если набрано достаточное количество очков, перейти на следующий уровень,
+        // иначе - проверить условие проигрыша.
+        if (currentPoints >= toNextLevelPoints)
         {
-            ShowGameOver();
+            StartNextLevel();
         }
+        else
+        {
+            if (shots <= 0)
+            {
+                ShowGameOver();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Показать сообщение пользователю.
+    /// </summary>
+    /// <param name="message">Текст сообщения.</param>
+    public void ShowMessage(string message)
+    {
+        uiController.ShowMessage(message);
     }
 }
