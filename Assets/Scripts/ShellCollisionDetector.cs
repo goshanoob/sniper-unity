@@ -6,24 +6,27 @@ using UnityEngine;
 /// </summary>
 public class ShellCollisionDetector : MonoBehaviour
 {
-    private bool wasCollised = false;
+    /// <summary>
+    /// Снаряд доступен для столкновения.
+    /// </summary>
+    private bool canCollised = false;
     
     /// <summary>
-    /// Столкновение с кубом мишени.
+    /// Событие столкновения с кубом мишени.
     /// </summary>
-    public event Action<Color> OnTargetCollision;
+    public event Action<float> OnTargetCollision;
     
     /// <summary>
-    /// Долгое соприкосновение.
+    /// Событие остановки снаряда.
     /// </summary>
-    public event Action<float> OnLongCollision;
+    public event Action OnStopped;
 
     private void Update()
     {
         // Если вектор скорости близок к нулевому, вызвать событие остановки снаряда.
         if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < Mathf.Epsilon)
         {
-            OnLongCollision(1f);
+            OnStopped();
         }
     }
 
@@ -33,11 +36,19 @@ public class ShellCollisionDetector : MonoBehaviour
     /// <param name="collision">Поверхность столкновения.</param>
     private void OnCollisionEnter(Collision collision)
     {
-        if (!wasCollised)
+        // Если снаряд еще ни с чем не сталкивался, вызвать событие столкновения.
+        if (!canCollised)
         {
-            Color color = collision.gameObject.GetComponent<Renderer>().materials[0].color;
-            wasCollised = true;
-            OnTargetCollision(color);
+            // Вернуть стоимость попадания в куб мишени.
+            float cost = 0;
+            TargetsCube targetsCube = collision.gameObject.GetComponent<TargetsCube>();
+            // Если столкновение произошло не с мишенью, стоимость попадания равна 0.
+            if (targetsCube != null)
+            {
+                cost = targetsCube.Cost;
+            }
+            canCollised = true;
+            OnTargetCollision(cost);
         }
     }
 }

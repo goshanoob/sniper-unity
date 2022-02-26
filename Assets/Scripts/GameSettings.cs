@@ -23,7 +23,7 @@ public class GameSettings : MonoBehaviour
     /// <summary>
     /// Количество очков в зависимости от цвета куба мишени.
     /// </summary>
-    private readonly int[] pointsRange = new int[] { 70, 80, 90, 100 };
+    private readonly float[] pointsRange = new float[] { 70, 80, 90, 100 };
 
     /// <summary>
     /// Цвета мишени от края к центру.
@@ -54,7 +54,7 @@ public class GameSettings : MonoBehaviour
     /// <summary>
     /// Количество очков в зависимости от пораженного куба.
     /// </summary>
-    public int[] PointsRange
+    public float[] PointsRange
     {
         get { return pointsRange; }
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Timers;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
@@ -60,17 +59,17 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество снарядов в соответствии с выбранным оружием.
     /// </summary>
-    private readonly int[] shellsCount = new int[] { 1, 1, 5, 5 };
+    private readonly int[] shellsCount = new int[] {1, 1, 5, 5};
 
     /// <summary>
     /// Множители количества очков в соответствии с выбранным оружием.
     /// </summary>
-    private readonly float[] multipliers = new float[] { 0.5f, 1f, 0.1f, 0.2f };
+    private readonly float[] multipliers = new float[] {0.5f, 1f, 0.1f, 0.2f};
 
     /// <summary>
     /// Количество доступных выстрелов в соответствии с выбранным оружием.
     /// </summary>
-    private readonly int[] shotsCount = new int[] { 3, 2, 3, 2 };
+    private readonly int[] shotsCount = new int[] {3, 2, 3, 2};
 
     /// <summary>
     /// Выбранное оружие.
@@ -109,7 +108,7 @@ public class WeaponController : MonoBehaviour
     {
         get => shotsCounter;
     }
-    
+
     public int ShotsCount
     {
         get => shotsCount[shotsCounter];
@@ -172,35 +171,17 @@ public class WeaponController : MonoBehaviour
         body.collisionDetectionMode = CollisionDetectionMode.Continuous;
         // Зарегистрировать обработчики событий в результате коллизий.
         detector.OnTargetCollision += OnTargetCollisionEventHandler;
-        detector.OnLongCollision += OnLongCollisionEventHandler;
+        detector.OnStopped += OnStoppedEventHandler;
         return shell;
     }
 
     /// <summary>
     /// Обработчик события столкновения снаряда с мишенью.
     /// </summary>
-    private void OnTargetCollisionEventHandler(Color color)
+    private void OnTargetCollisionEventHandler(float points)
     {
-        // Определить, столкнулся ли снаряд с мишенью или чем-то другим.
-        bool isTarget = false;
-        // Перебрать цвета мишени.
-        foreach (Color targetColor in settings.TargetsColors)
-        {
-            // Если цвет поверхности столкновения совпадает с любым цветом мишени, значит столкнулись с мишенью.
-            if (color == targetColor)
-            {
-                isTarget = true;
-            }
-        }
-
-        // Если столкновение произошло не с мишенью, завершить функцию.
-        if (!isTarget)
-        {
-            return;
-        }
-
         // Начислить игроку очки.
-        sceneController.ScorePoints(color);
+        sceneController.ScorePoints(points);
 
         // Удалить снаряды со сцены и показать мишень на несколько секунд.
         StartCoroutine(cameraController.ShowTargetForTime());
@@ -211,7 +192,7 @@ public class WeaponController : MonoBehaviour
     /// Обработчик события потери снарядом скорости.
     /// </summary>
     /// <param name="time"></param>
-    private void OnLongCollisionEventHandler(float time)
+    private void OnStoppedEventHandler()
     {
         RemoveShellsNow();
         cameraController.MoveToOrigin();
@@ -259,7 +240,7 @@ public class WeaponController : MonoBehaviour
             {
                 ShellCollisionDetector detector = shell.GetComponent<ShellCollisionDetector>();
                 detector.OnTargetCollision -= OnTargetCollisionEventHandler;
-                detector.OnLongCollision -= OnLongCollisionEventHandler;
+                detector.OnStopped -= OnStoppedEventHandler;
                 Destroy(shell);
             }
         }

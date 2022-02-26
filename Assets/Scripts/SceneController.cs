@@ -97,29 +97,9 @@ public class SceneController : MonoBehaviour
     /// Начислить очки игроку.
     /// </summary>
     /// <param name="color"></param>
-    public void ScorePoints(Color color)
+    public void ScorePoints(float points)
     {
-        if (color == settings.TargetsColors[0])
-        {
-            currentPoints += settings.PointsRange[0] * weapon.CurrentMultiplier;
-        }
-        else if (color == settings.TargetsColors[1])
-        {
-            currentPoints += settings.PointsRange[1] * weapon.CurrentMultiplier;
-        }
-        else if (color == settings.TargetsColors[2])
-        {
-            currentPoints += settings.PointsRange[2] * weapon.CurrentMultiplier;
-        }
-        else if (color == settings.TargetsColors[3])
-        {
-            currentPoints += settings.PointsRange[3] * weapon.CurrentMultiplier;
-        }
-        else
-        {
-            return;
-        }
-
+        currentPoints += points * weapon.CurrentMultiplier;
         uiController.PrintPoints(currentPoints);
         // Если набрано достаточное количество очков, перейти на следующий уровень.
         if (currentPoints >= toNextLevelPoints)

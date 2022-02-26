@@ -33,6 +33,7 @@ public class TargetCreator : MonoBehaviour
         target = new GameObject("Target");
         target.transform.position = new Vector3(0, 0, settings.TargetDistance);
         Color[] colors = settings.TargetsColors;
+        float[] points = settings.PointsRange;
 
         int columnCount = 7;
         int rowCount = 7;
@@ -45,33 +46,38 @@ public class TargetCreator : MonoBehaviour
             int endNumber = rowCount - 1 - i;
             for (int j = 0; j < columnCount; j++)
             {
-                GameObject cubeTarget = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cubeTarget.transform.localScale = Vector3.one;
-                Rigidbody cubeTargetBody = cubeTarget.AddComponent<Rigidbody>();
-                cubeTargetBody.mass = cubeTargetMass;
-                cubeTarget.transform.parent = target.transform;
-                cubeTarget.transform.localPosition = new Vector3(offsetX, offsetY, 0);
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Rigidbody cubeTargetBody = cube.AddComponent<Rigidbody>();
+                TargetsCube targetsCube = cube.AddComponent<TargetsCube>();
+                Material cubeMaterial = cube.GetComponent<Renderer>().materials[0];
 
-                Material cubeMaterial = cubeTarget.GetComponent<Renderer>().materials[0];
+                cube.transform.localScale = Vector3.one;
+                cube.transform.parent = target.transform;
+                cube.transform.localPosition = new Vector3(offsetX, offsetY, 0);
+                cubeTargetBody.mass = cubeTargetMass;
 
                 if (j == 0 || j == 6 || i == 0 || i == 6)
                 {
                     cubeMaterial.color = colors[0];
+                    targetsCube.Cost = points[0];
                 }
 
                 if (j >= 1 && j <= 5 && i >= 1 && i <= 5)
                 {
                     cubeMaterial.color = colors[1];
+                    targetsCube.Cost = points[1];
                 }
 
                 if (j >= 2 && j <= 4 && i >= 2 && i <= 4)
                 {
                     cubeMaterial.color = colors[2];
+                    targetsCube.Cost = points[2];
                 }
 
                 if (j >= 3 && j <= 3 && i >= 3 && i <= 3)
                 {
                     cubeMaterial.color = colors[3];
+                    targetsCube.Cost = points[3];
                 }
 
                 offsetX += cubeSize;
