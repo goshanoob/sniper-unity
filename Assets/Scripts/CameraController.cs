@@ -52,19 +52,20 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Посмотреть на мишень.
+    /// Изучить мишень.
     /// </summary>
     public void ShowTarget()
     {
-        // Местоположение мишени.
-        Vector3 lookPosition = cameraOrigin + Vector3.forward * (settings.TargetDistance - 10);
+        // Местоположение камеры вблизи мишени.
+        float distanceToTarget = 10f;
+        
+        Vector3 lookPosition = cameraOrigin + Vector3.forward * (settings.TargetDistance - distanceToTarget);
+        transform.position = lookPosition;
+        transform.LookAt( lookPosition + Vector3.forward);
 
         chaser.CanChase = false;
         shaker.CanShake = false;
         rotator.CanRotate = false;
-
-        transform.position = lookPosition;
-        transform.LookAt(lookPosition);
     }
 
     /// <summary>

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Контроллер оружия.
+/// </summary>
 public class WeaponController : MonoBehaviour
 {
     /// <summary>
@@ -69,7 +72,12 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество доступных выстрелов в соответствии с выбранным оружием.
     /// </summary>
-    private readonly int[] shotsCount = new int[] {3, 2, 3, 2};
+    private readonly int[] maxShots = new int[] {3, 2, 3, 2};
+
+    /// <summary>
+    /// Событие выстрела.
+    /// </summary>
+    public event Action OnShot;
 
     /// <summary>
     /// Выбранное оружие.
@@ -88,17 +96,17 @@ public class WeaponController : MonoBehaviour
     }
 
     /// <summary>
-    /// Количество снарядов в зависимости от выбранного оружия.
+    /// Количество снарядов за выстрел в зависимости от выбранного оружия.
     /// </summary>
     private int CurrentShellsCount
     {
-        get => shellsCount[currentWeapon];
+        get => shellsCount[currentWeapon - 1];
     }
 
     // Множитель начисления очков в зависимости от выбранного оружия.
     public float CurrentMultiplier
     {
-        get => multipliers[currentWeapon];
+        get => multipliers[currentWeapon - 1];
     }
 
     /// <summary>
@@ -109,9 +117,12 @@ public class WeaponController : MonoBehaviour
         get => shotsCounter;
     }
 
-    public int ShotsCount
+    /// <summary>
+    /// Максимально доступное число выстрелов для выбранного оружия.
+    /// </summary>
+    public int MaxShots
     {
-        get => shotsCount[shotsCounter];
+        get => maxShots[currentWeapon - 1];
     }
 
     private void Start()
@@ -150,10 +161,9 @@ public class WeaponController : MonoBehaviour
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
         }
 
+        OnShot();
         // Учесть выстрел.
         CheckShotsCount();
-        // Переключить камеру в режим следования за снарядом.
-        cameraController.ChangeToChase();
     }
 
     /// <summary>
@@ -171,7 +181,7 @@ public class WeaponController : MonoBehaviour
         body.collisionDetectionMode = CollisionDetectionMode.Continuous;
         // Зарегистрировать обработчики событий в результате коллизий.
         detector.OnTargetCollision += OnTargetCollisionEventHandler;
-        detector.OnStopped += OnStoppedEventHandler;
+        detector.OnMissed += OnMissedEventHandler;
         return shell;
     }
 
@@ -191,8 +201,7 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Обработчик события потери снарядом скорости.
     /// </summary>
-    /// <param name="time"></param>
-    private void OnStoppedEventHandler()
+    private void OnMissedEventHandler()
     {
         RemoveShellsNow();
         cameraController.MoveToOrigin();
@@ -209,8 +218,8 @@ public class WeaponController : MonoBehaviour
 
         // Если снаряд вылетел за границы игрового поля, уничтожить его немедленно и вернуть камеру в режим прицеливания.
         if (currentPosition.x < -fieldSizes[0] / 2 || currentPosition.x > fieldSizes[0] / 2 ||
-            currentPosition.y < 0 || currentPosition.z > fieldSizes[1] ||
-            currentPosition.z < 0)
+            currentPosition.y < 0 || 
+            currentPosition.z > fieldSizes[1] || currentPosition.z < 0)
         {
             RemoveShellsNow();
             cameraController.MoveToOrigin();
@@ -240,7 +249,7 @@ public class WeaponController : MonoBehaviour
             {
                 ShellCollisionDetector detector = shell.GetComponent<ShellCollisionDetector>();
                 detector.OnTargetCollision -= OnTargetCollisionEventHandler;
-                detector.OnStopped -= OnStoppedEventHandler;
+                detector.OnMissed -= OnMissedEventHandler;
                 Destroy(shell);
             }
         }
@@ -262,5 +271,7 @@ public class WeaponController : MonoBehaviour
     {
         shotsCounter++;
         sceneController.ChangeShots();
+        // Переключить камеру в режим следования за снарядом.
+        cameraController.ChangeToChase();
     }
 }

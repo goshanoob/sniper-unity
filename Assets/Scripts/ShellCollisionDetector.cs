@@ -9,7 +9,7 @@ public class ShellCollisionDetector : MonoBehaviour
     /// <summary>
     /// Снаряд доступен для столкновения.
     /// </summary>
-    private bool canCollised = false;
+    private bool canCollised = true;
     
     /// <summary>
     /// Событие столкновения с кубом мишени.
@@ -17,18 +17,9 @@ public class ShellCollisionDetector : MonoBehaviour
     public event Action<float> OnTargetCollision;
     
     /// <summary>
-    /// Событие остановки снаряда.
+    /// Событие промаха.
     /// </summary>
-    public event Action OnStopped;
-
-    private void Update()
-    {
-        // Если вектор скорости близок к нулевому, вызвать событие остановки снаряда.
-        if (gameObject.GetComponent<Rigidbody>().velocity.magnitude < Mathf.Epsilon)
-        {
-            OnStopped();
-        }
-    }
+    public event Action OnMissed;
 
     /// <summary>
     /// Снаряд столкнулся с поверхностью.
@@ -37,18 +28,20 @@ public class ShellCollisionDetector : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Если снаряд еще ни с чем не сталкивался, вызвать событие столкновения.
-        if (!canCollised)
+        if (canCollised)
         {
-            // Вернуть стоимость попадания в куб мишени.
-            float cost = 0;
             TargetsCube targetsCube = collision.gameObject.GetComponent<TargetsCube>();
-            // Если столкновение произошло не с мишенью, стоимость попадания равна 0.
+            // Если столкновение произошло с мишенью, сгенерировать событие попадания, иначе - событие промаха.
             if (targetsCube != null)
             {
-                cost = targetsCube.Cost;
+                // Передать стоимость попадания в куб мишени.
+                OnTargetCollision(targetsCube.Cost);
             }
-            canCollised = true;
-            OnTargetCollision(cost);
+            else
+            {
+                OnMissed();
+            }
+            canCollised = false;
         }
     }
 }

@@ -36,6 +36,7 @@ public class PlayerControl : MonoBehaviour
         bool twoButton = Input.GetKey(KeyCode.Alpha2);
         bool threeButton = Input.GetKey(KeyCode.Alpha3);
         bool fourButton = Input.GetKey(KeyCode.Alpha4);
+        Debug.Log("leftClick:  " + leftClick);
         // Если зажата клавиша пробел, вызвать событие.
         if (spaceDown)
         {
@@ -51,6 +52,7 @@ public class PlayerControl : MonoBehaviour
         // Если нажали левую кнопку мыши, вызвать событие.
         if (leftClick && !EventSystem.current.IsPointerOverGameObject())
         {
+            Debug.Log("Щелчок!");
             OnLeftClick?.Invoke();
         }
 

@@ -80,8 +80,10 @@ public class SceneController : MonoBehaviour
         player.OnSpaceUp += cameraController.MoveToOrigin;
         player.OnNumButtonPress += weapon.ChangeWeapon;
         player.OnNumButtonPress += uiController.PrintWeapon;
-    }
 
+        weapon.OnShot += () => { };
+    }
+    
     private void Start()
     {
         // Добавить на сцену мишень.
@@ -90,7 +92,7 @@ public class SceneController : MonoBehaviour
         uiController.PrintLevel(currentLevel);
         uiController.PrintPoints(currentPoints);
         uiController.PrintWeapon(weapon.CurrentWeapon);
-        uiController.PrintShots(weapon.ShotsCount);
+        uiController.PrintShots(weapon.MaxShots);
     }
 
     /// <summary>
@@ -142,7 +144,7 @@ public class SceneController : MonoBehaviour
 
     public void ChangeShots()
     {
-        int delta = weapon.ShotsCount - weapon.ShotsCounter;
+        int delta = weapon.MaxShots - weapon.ShotsCounter;
         uiController.PrintShots(delta);
         if (delta <= 0)
         {

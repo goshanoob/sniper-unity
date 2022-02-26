@@ -66,12 +66,11 @@ public class CameraShaker : MonoBehaviour
             result += $"{this.x[i]};{this.y[i]}\n";
         }
 
-        Debug.Log(result);
+        // Debug.Log(result);
     }
 
     private void Update()
     {
-        float distance = 1.0f;
         timer += Time.deltaTime;
         if (timer >= 0.03f && canShake)
         {

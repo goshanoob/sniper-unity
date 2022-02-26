@@ -43,7 +43,7 @@ public class TargetCreator : MonoBehaviour
 
         for (int i = 0; i < rowCount; i++)
         {
-            int endNumber = rowCount - 1 - i;
+            // int endNumber = rowCount - 1 - i;
             for (int j = 0; j < columnCount; j++)
             {
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -56,25 +56,25 @@ public class TargetCreator : MonoBehaviour
                 cube.transform.localPosition = new Vector3(offsetX, offsetY, 0);
                 cubeTargetBody.mass = cubeTargetMass;
 
-                if (j == 0 || j == 6 || i == 0 || i == 6)
+                if (j == 0 || j == rowCount - 1 || i == 0 || i == rowCount - 1)
                 {
                     cubeMaterial.color = colors[0];
                     targetsCube.Cost = points[0];
                 }
 
-                if (j >= 1 && j <= 5 && i >= 1 && i <= 5)
+                if (j >= 1 && j <= rowCount - 2 && i >= 1 && i <= rowCount - 2)
                 {
                     cubeMaterial.color = colors[1];
                     targetsCube.Cost = points[1];
                 }
 
-                if (j >= 2 && j <= 4 && i >= 2 && i <= 4)
+                if (j >= 2 && j <=  rowCount- 3 && i >= 2 && i <= rowCount - 3)
                 {
                     cubeMaterial.color = colors[2];
                     targetsCube.Cost = points[2];
                 }
 
-                if (j >= 3 && j <= 3 && i >= 3 && i <= 3)
+                if (j >= 3 && j <= rowCount - 4 && i >= 3 && i <= rowCount - 4)
                 {
                     cubeMaterial.color = colors[3];
                     targetsCube.Cost = points[3];
