@@ -71,10 +71,10 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Посмотреть на мишень в течение 2 секунд.
     /// </summary>
-    public IEnumerator ShowTargetForTime()
+    public IEnumerator ShowTargetForTime(float time)
     {
         ShowTarget();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(time);
         MoveToOrigin();
     }
 

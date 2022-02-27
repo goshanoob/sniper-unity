@@ -19,7 +19,7 @@ public class ShellCollisionDetector : MonoBehaviour
     /// <summary>
     /// Событие промаха.
     /// </summary>
-    public event EventHandler OnMissed;
+    public event Action<GameObject> OnMissed;
 
     /// <summary>
     /// Снаряд столкнулся с поверхностью.
@@ -35,11 +35,11 @@ public class ShellCollisionDetector : MonoBehaviour
             if (targetsCube != null)
             {
                 // Передать стоимость попадания в куб мишени.
-                OnTargetCollision(gameObject, targetsCube.Cost);
+                OnTargetCollision?.Invoke(gameObject, targetsCube.Cost);
             }
             else
             {
-                OnMissed(gameObject, EventArgs.Empty);
+                OnMissed?.Invoke(gameObject);
             }
             canCollised = false;
         }

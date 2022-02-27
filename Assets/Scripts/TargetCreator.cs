@@ -21,26 +21,20 @@ public class TargetCreator : MonoBehaviour
     private GameObject target = null;
 
     /// <summary>
-    /// Количество кубов в мишени.
-    /// </summary>
-    private const int cubeCount = 49;
-
-    /// <summary>
     /// Сформировать мишень.
     /// </summary>
     public void CreateTarget()
     {
-        target = new GameObject("Target");
-        target.transform.position = new Vector3(0, 0, settings.TargetDistance);
-        Color[] colors = settings.TargetsColors;
-        float[] points = settings.PointsRange;
-
         int columnCount = 7;
         int rowCount = 7;
         float offsetX = -columnCount / 2.0f;
         float offsetY = 0.5f;
         float cubeSize = 1f;
+        Color[] colors = settings.TargetsColors;
+        float[] points = settings.PointsRange;
 
+        target = new GameObject("Target");
+        target.transform.position = new Vector3(0, 0, settings.TargetDistance);
         for (int i = 0; i < rowCount; i++)
         {
             // int endNumber = rowCount - 1 - i;
@@ -68,7 +62,7 @@ public class TargetCreator : MonoBehaviour
                     targetsCube.Cost = points[1];
                 }
 
-                if (j >= 2 && j <=  rowCount- 3 && i >= 2 && i <= rowCount - 3)
+                if (j >= 2 && j <= rowCount - 3 && i >= 2 && i <= rowCount - 3)
                 {
                     cubeMaterial.color = colors[2];
                     targetsCube.Cost = points[2];

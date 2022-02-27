@@ -74,11 +74,8 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private readonly int[] maxShots = new int[] {3, 2, 3, 2};
 
-    /// <summary>
-    /// Событие выстрела.
-    /// </summary>
-    public event Action OnShot;
-
+    private bool hasHit = false;
+    
     /// <summary>
     /// Выбранное оружие.
     /// </summary>
@@ -98,7 +95,7 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество снарядов за выстрел в зависимости от выбранного оружия.
     /// </summary>
-    private int CurrentShellsCount
+    public int CurrentShellsCount
     {
         get => shellsCount[currentWeapon - 1];
     }
@@ -166,7 +163,6 @@ public class WeaponController : MonoBehaviour
             shells[i].GetComponent<Rigidbody>().AddForce(cameraDirection * shotForce, ForceMode.Impulse);
         }
 
-        OnShot();
         shotsCounter++;
         // Переключить камеру в режим следования за снарядом.
         cameraController.ChangeToChase();
@@ -196,22 +192,20 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private void OnTargetCollisionEventHandler(GameObject shell, float points)
     {
+        Debug.Log(points);
+        hasHit = true;
         // Начислить игроку очки и проверить выстрелы.
         sceneController.ScorePointsAndShots(points, ExistingShots);
-
-        // Удалить снаряды со сцены и показать мишень на несколько секунд.
-        StartCoroutine(cameraController.ShowTargetForTime());
+        // Удалить снаряд со сцены.
         StartCoroutine(RemoveShellForSecond(shell));
     }
 
     /// <summary>
     /// Обработчик события промаха снаряда.
     /// </summary>
-    private void OnMissedEventHandler(object sender, EventArgs eventArgs)
+    private void OnMissedEventHandler(GameObject sender)
     {
-        // RemoveShellsNow();
-        RemoveShellNow((GameObject) sender);
-        cameraController.MoveToOrigin();
+        RemoveShellNow(sender);
         // Начислить игроку очки и выстрелы, проверить условие поражения.
         sceneController.ScorePointsAndShots(0, ExistingShots);
     }
@@ -221,6 +215,7 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private void CheckForDestroy()
     {
+        
         // Получить размеры игрового поля и текущее положение снаряда.
         float[] fieldSizes = settings.GameFieldSizes;
         foreach (GameObject shell in shells)
@@ -228,15 +223,16 @@ public class WeaponController : MonoBehaviour
             if (shell != null)
             {
                 Vector3 currentPosition = shell.transform.position;
+                Debug.Log(currentPosition);
                 // Если снаряд вылетел за границы игрового поля, уничтожить его немедленно и вернуть камеру в режим прицеливания.
                 if (currentPosition.x < -fieldSizes[0] / 2 || currentPosition.x > fieldSizes[0] / 2 ||
                     currentPosition.y < 0 ||
                     currentPosition.z > fieldSizes[1] || currentPosition.z < 0)
                 {
                     RemoveShellNow(shell);
-                    cameraController.MoveToOrigin();
                     // Начислить игроку очки и выстрелы, проверить условие поражения.
                     sceneController.ScorePointsAndShots(0, ExistingShots);
+                    Debug.Log("CheckForDestroy");
                 }
             }
         }
@@ -297,15 +293,7 @@ public class WeaponController : MonoBehaviour
     /// <param name="weapon">Номер выбранного оружия.</param>
     public void ChangeWeapon(int weapon)
     {
-        // Если не было произведено ни одного выстрела, сменить оружие.
-        if (shotsCounter == 0)
-        {
-            currentWeapon = weapon;
-        }
-        else
-        {
-            sceneController.ShowMessage("Смена оружия только в начале уровня");
-        }
+        currentWeapon = weapon;
     }
 
     /// <summary>

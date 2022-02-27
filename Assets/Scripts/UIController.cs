@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,12 +42,17 @@ public class UIController : MonoBehaviour
     /// Сообщение большими буквами.
     /// </summary>
     [SerializeField] private Text bigMessage = null;
-    
+
     /// <summary>
     /// Сообщение маленькими буквами.
     /// </summary>
     [SerializeField] private Text smallMessage = null;
-    
+
+    /// <summary>
+    /// Событие перезапуска игры.
+    /// </summary>
+    public event Action OnRestart;
+
     /// <summary>
     /// Вывести текущий уровень игры.
     /// </summary>
@@ -109,6 +115,14 @@ public class UIController : MonoBehaviour
     public void ShowMessage(string message)
     {
         StartCoroutine(PrintText(message));
+    }
+
+    /// <summary>
+    /// Сгенерировать событие перезапуска игры.
+    /// </summary>
+    public void OnRestartClick()
+    {
+        OnRestart?.Invoke();
     }
 
     /// <summary>
