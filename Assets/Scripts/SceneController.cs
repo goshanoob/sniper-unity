@@ -99,7 +99,7 @@ public class SceneController : MonoBehaviour
             currentPoints += points * weapon.CurrentMultiplier;
             uiController.PrintPoints(currentPoints);
         }
-        Debug.Log(shellsCounter);
+
         // Если все снаряды прилетели, показать мишень и проверить доступен ли следующий уровень.
         if (shellsCounter == weapon.CurrentShellsCount)
         {
@@ -123,6 +123,7 @@ public class SceneController : MonoBehaviour
                 weapon.ChangeWeapon(number);
                 uiController.PrintWeapon(number);
                 uiController.PrintShots(weapon.MaxShots);
+                cameraController.ChangeShakeSpeed(weapon.Shakes);
             }
             else
             {

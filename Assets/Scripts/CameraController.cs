@@ -99,4 +99,13 @@ public class CameraController : MonoBehaviour
         chaser.CanChase = true;
         uiController.ToggleAim(false);
     }
+
+    /// <summary>
+    /// Изменить скорость качания камеры.
+    /// </summary>
+    /// <param name="speed">Скорость качания.</param>
+    public void ChangeShakeSpeed(int speed)
+    {
+        shaker.ShakeMode = speed;
+    }
 }

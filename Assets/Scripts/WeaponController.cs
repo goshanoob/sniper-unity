@@ -74,7 +74,10 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private readonly int[] maxShots = new int[] {3, 2, 3, 2};
 
-    private bool hasHit = false;
+    /// <summary>
+    /// Сложность стрельбы в соответствии с выбранным оружием.
+    /// </summary>
+    private readonly int[] shakes = new int[] { 0, 1, 0, 1 };
     
     /// <summary>
     /// Выбранное оружие.
@@ -100,7 +103,9 @@ public class WeaponController : MonoBehaviour
         get => shellsCount[currentWeapon - 1];
     }
 
-    // Множитель начисления очков в зависимости от выбранного оружия.
+    /// <summary>
+    /// Множитель начисления очков в зависимости от выбранного оружия.
+    /// </summary>
     public float CurrentMultiplier
     {
         get => multipliers[currentWeapon - 1];
@@ -122,6 +127,14 @@ public class WeaponController : MonoBehaviour
         get => maxShots[currentWeapon - 1];
     }
 
+    /// <summary>
+    /// Сложность стрельбы (скорость качания камеры).
+    /// </summary>
+    public int Shakes
+    {
+        get => shakes[currentWeapon - 1];
+    }
+    
     /// <summary>
     /// Оставшееся количество выстрелов.
     /// </summary>
@@ -180,7 +193,7 @@ public class WeaponController : MonoBehaviour
         shell.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         body.mass = 0.2f;
         // Выбрать постоянный режим определения коллизий.
-        body.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         // Зарегистрировать обработчики событий в результате коллизий.
         detector.OnTargetCollision += OnTargetCollisionEventHandler;
         detector.OnMissed += OnMissedEventHandler;
@@ -193,7 +206,6 @@ public class WeaponController : MonoBehaviour
     private void OnTargetCollisionEventHandler(GameObject shell, float points)
     {
         Debug.Log(points);
-        hasHit = true;
         // Начислить игроку очки и проверить выстрелы.
         sceneController.ScorePointsAndShots(points, ExistingShots);
         // Удалить снаряд со сцены.
@@ -283,7 +295,7 @@ public class WeaponController : MonoBehaviour
 
     private IEnumerator RemoveShellForSecond(GameObject shell)
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         RemoveShellNow(shell);
     }
 

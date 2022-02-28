@@ -18,7 +18,7 @@ public class GameSettings : MonoBehaviour
     /// <summary>
     /// Размеры игрового поля.
     /// </summary>
-    private readonly float[] gameFieldSizes = new float[] { 30f, 110f };
+    private readonly float[] gameFieldSizes = new float[] { 30f, 120f };
 
     /// <summary>
     /// Количество очков в зависимости от цвета куба мишени.
