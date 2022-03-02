@@ -10,12 +10,12 @@ public class ShellCollisionDetector : MonoBehaviour
     /// Снаряд доступен для столкновения.
     /// </summary>
     private bool canCollised = true;
-    
+
     /// <summary>
     /// Событие столкновения с кубом мишени.
     /// </summary>
     public event Action<GameObject, float> OnTargetCollision;
-    
+
     /// <summary>
     /// Событие промаха.
     /// </summary>
@@ -41,6 +41,7 @@ public class ShellCollisionDetector : MonoBehaviour
             {
                 OnMissed?.Invoke(gameObject);
             }
+
             canCollised = false;
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -47,6 +46,7 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private readonly int maxShellsCount = 5;
 
+
     /// <summary>
     /// Положения снарядов при создании.
     /// </summary>
@@ -62,23 +62,23 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Количество снарядов в соответствии с выбранным оружием.
     /// </summary>
-    private readonly int[] shellsCount = new int[] {1, 1, 5, 5};
+    private readonly int[] shellsCount = new int[] { 1, 1, 5, 5 };
 
     /// <summary>
     /// Множители количества очков в соответствии с выбранным оружием.
     /// </summary>
-    private readonly float[] multipliers = new float[] {0.5f, 1f, 0.1f, 0.2f};
+    private readonly float[] multipliers = new float[] { 0.5f, 1f, 0.1f, 0.2f };
 
     /// <summary>
     /// Количество доступных выстрелов в соответствии с выбранным оружием.
     /// </summary>
-    private readonly int[] maxShots = new int[] {3, 2, 3, 2};
+    private readonly int[] maxShots = new int[] { 3, 2, 3, 2 };
 
     /// <summary>
     /// Сложность стрельбы в соответствии с выбранным оружием.
     /// </summary>
     private readonly int[] shakes = new int[] { 0, 1, 0, 1 };
-    
+
     /// <summary>
     /// Выбранное оружие.
     /// </summary>
@@ -134,7 +134,7 @@ public class WeaponController : MonoBehaviour
     {
         get => shakes[currentWeapon - 1];
     }
-    
+
     /// <summary>
     /// Оставшееся количество выстрелов.
     /// </summary>
@@ -205,10 +205,8 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private void OnTargetCollisionEventHandler(GameObject shell, float points)
     {
-        Debug.Log(points);
         // Начислить игроку очки и проверить выстрелы.
         sceneController.ScorePointsAndShots(points, ExistingShots);
-        // Удалить снаряд со сцены.
         StartCoroutine(RemoveShellForSecond(shell));
     }
 
@@ -227,7 +225,6 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     private void CheckForDestroy()
     {
-        
         // Получить размеры игрового поля и текущее положение снаряда.
         float[] fieldSizes = settings.GameFieldSizes;
         foreach (GameObject shell in shells)
@@ -235,7 +232,6 @@ public class WeaponController : MonoBehaviour
             if (shell != null)
             {
                 Vector3 currentPosition = shell.transform.position;
-                Debug.Log(currentPosition);
                 // Если снаряд вылетел за границы игрового поля, уничтожить его немедленно и вернуть камеру в режим прицеливания.
                 if (currentPosition.x < -fieldSizes[0] / 2 || currentPosition.x > fieldSizes[0] / 2 ||
                     currentPosition.y < 0 ||
@@ -251,37 +247,9 @@ public class WeaponController : MonoBehaviour
     }
 
     /// <summary>
-    /// Уничтожить снаряды по истечении времени.
+    /// Немедленно уничтожить указанный снаряд.
     /// </summary>
-    private IEnumerator RemoveShells()
-    {
-        // Отложить уничтожение снарядов на одну секунду.
-        yield return new WaitForSeconds(1);
-        RemoveShellsNow();
-    }
-
-    /// <summary>
-    /// Уничтожить снаряды немедленно.
-    /// </summary>
-    private void RemoveShellsNow()
-    {
-        // Перебрать игровые объекты снарядов и уничтожить.
-        foreach (GameObject shell in shells)
-        {
-            // Отписаться от событий класса-компонента перед удалением объекта.
-            if (shell != null)
-            {
-                ShellCollisionDetector detector = shell.GetComponent<ShellCollisionDetector>();
-                detector.OnTargetCollision -= OnTargetCollisionEventHandler;
-                detector.OnMissed -= OnMissedEventHandler;
-                Destroy(shell);
-            }
-        }
-
-        // Очистить массив со ссылками на игровые снаряды.
-        Array.Clear(shells, 0, shells.Length);
-    }
-
+    /// <param name="shell">Уничтожаемый снаряд.</param>
     private void RemoveShellNow(GameObject shell)
     {
         if (shell != null)
@@ -290,12 +258,18 @@ public class WeaponController : MonoBehaviour
             detector.OnTargetCollision -= OnTargetCollisionEventHandler;
             detector.OnMissed -= OnMissedEventHandler;
             Destroy(shell);
+            // Здесь, возможно, следует удалить ссылку на снаряд из массива shells.
         }
     }
 
-    private IEnumerator RemoveShellForSecond(GameObject shell)
+    /// <summary>
+    /// Уничтожить снаряд через заданное количество секунд. 
+    /// </summary>
+    /// <param name="shell">Уничтожаемый снаряд.</param>
+    /// <param name="seconds">Время до уничтожения.</param>
+    private IEnumerator RemoveShellForSecond(GameObject shell, int seconds = 2)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(seconds);
         RemoveShellNow(shell);
     }
 

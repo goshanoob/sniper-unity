@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
     /// Преследование камерой летящего снаряда.
     /// </summary>
     [SerializeField] private CameraChaser chaser = null;
-    
+
     /// <summary>
     /// Контроллер графического интерфейса.
     /// </summary>
@@ -58,10 +58,10 @@ public class CameraController : MonoBehaviour
     {
         // Местоположение камеры вблизи мишени.
         float distanceToTarget = 10f;
-        
+
         Vector3 lookPosition = cameraOrigin + Vector3.forward * (settings.TargetDistance - distanceToTarget);
         transform.position = lookPosition;
-        transform.LookAt( lookPosition + Vector3.forward);
+        transform.LookAt(lookPosition + Vector3.forward);
 
         chaser.CanChase = false;
         shaker.CanShake = false;
@@ -69,8 +69,9 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Посмотреть на мишень в течение 2 секунд.
+    /// Показать мишень в течение времени.
     /// </summary>
+    /// <param name="time">Время показа мишени.</param>
     public IEnumerator ShowTargetForTime(float time)
     {
         ShowTarget();

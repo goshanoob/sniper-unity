@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -27,12 +24,12 @@ public class CameraShaker : MonoBehaviour
     /// <summary>
     /// Текущий режим качания камеры.
     /// </summary>
-    private int currentShakeMode = 1;
+    private int currentShakeMode = 0;
 
     /// <summary>
     /// Доступные скорости качания камеры в соответствии с режимами качания.
     /// </summary>
-    private float[] shakesSpeeds = new float[] { 0.06f, 0.03f };
+    private float[] shakesSpeeds = new float[] { 0.04f, 0.02f };
 
     /// <summary>
     /// Текущая величина поворота камеры вокруг горизонтальной оси.
@@ -95,7 +92,7 @@ public class CameraShaker : MonoBehaviour
         // Вычислить координаты перемещения камеры по линии лемнискаты.
         GetLemniscatePoints();
     }
-    
+
     private void Update()
     {
         timer += Time.deltaTime;

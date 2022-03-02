@@ -53,6 +53,11 @@ public class SceneController : MonoBehaviour
     private readonly float toNextLevelPoints = 100;
 
     /// <summary>
+    /// Время паузы перед принятием решения о результате выстрела.
+    /// </summary>
+    private readonly float timeForResultsCheck = 3;
+
+    /// <summary>
     /// Счетчик прилетевших снарядов.
     /// </summary>
     private int shellsCounter = 0;
@@ -104,7 +109,7 @@ public class SceneController : MonoBehaviour
         if (shellsCounter == weapon.CurrentShellsCount)
         {
             shellsCounter = 0;
-            StartCoroutine(cameraController.ShowTargetForTime(3));
+            StartCoroutine(cameraController.ShowTargetForTime(timeForResultsCheck + 1));
             uiController.PrintShots(shots);
             StartCoroutine(CheckNextLevel(shots));
         }
@@ -130,7 +135,6 @@ public class SceneController : MonoBehaviour
                 uiController.ShowMessage("Смена оружия только в начале уровня");
             }
         }
-        ;
     }
 
     /// <summary>
@@ -183,8 +187,8 @@ public class SceneController : MonoBehaviour
     /// </summary>
     private IEnumerator CheckNextLevel(int shots)
     {
-        Debug.Log("CheckNextLevel");
-        yield return new WaitForSeconds(2);
+        // Подождать окончания показа мишени.
+        yield return new WaitForSeconds(timeForResultsCheck);
         // Если набрано достаточное количество очков, перейти на следующий уровень,
         // иначе - проверить условие проигрыша.
         if (currentPoints >= toNextLevelPoints)
